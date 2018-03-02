@@ -1,0 +1,23 @@
+{
+  "name": "purescript-aws-request",
+  "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/purescript-aws-sdk/purescript-aws-request.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^3.1.1",
+    "purescript-console": "^3.0.0",
+    "purescript-aff": "^4.0.2",
+    "purescript-foreign-generic": "^5.0.1"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^3.0.0"
+  }
+}
