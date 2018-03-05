@@ -15,4 +15,4 @@ test:
 
 release:
 	pulp version ${VERSION}
-	pulp publish
+	yes | pulp publish
