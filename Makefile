@@ -1,4 +1,5 @@
 .PHONY: clean build test release
+.DEFAULT_GOAL := build
 
 VERSION := 0.0.$(shell git log --oneline | wc -l | tr -d '[:space:]')
 
