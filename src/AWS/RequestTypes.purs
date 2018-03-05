@@ -4,12 +4,6 @@ import Prelude
 import Data.Foreign (toForeign)
 import AWS.Request (Decode, Encode)
 
-noArguments = unit :: Unit
-decodeNoArguments :: Decode Unit
-decodeNoArguments _ = pure unit
-encodeNoArguments :: Encode Unit
-encodeNoArguments _ = toForeign unit
-
 noInput = unit :: Unit
 decodeNoInput :: Decode Unit
 decodeNoInput _ = pure unit
