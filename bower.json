@@ -13,10 +13,8 @@
   ],
   "dependencies": {
     "purescript-prelude": "^3.1.1",
-    "purescript-console": "^3.0.0",
     "purescript-aff": "^4.0.2",
-    "purescript-foreign-generic": "^5.0.1",
-    "purescript-datetime": "^3.4.1"
+    "purescript-foreign": "^4.0.1"
   },
   "devDependencies": {
     "purescript-psci-support": "^3.0.0"
