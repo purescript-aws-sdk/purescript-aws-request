@@ -1,4 +1,4 @@
-.PHONY: clean build test release
+.PHONY: clean init build test release
 .DEFAULT_GOAL := build
 
 VERSION := 0.0.$(shell git log --oneline | wc -l | tr -d '[:space:]')
@@ -6,9 +6,11 @@ VERSION := 0.0.$(shell git log --oneline | wc -l | tr -d '[:space:]')
 clean:
 	rm -fr bower_components node_modules output
 
-build:
+init:
 	npm update
 	bower update
+
+build:
 	pulp build
 
 test:
