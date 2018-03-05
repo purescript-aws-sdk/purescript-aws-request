@@ -1,6 +1,9 @@
-.PHONY: build release test
+.PHONY: clean build test release
 
 VERSION := 0.0.$(shell git log --oneline | wc -l | tr -d '[:space:]')
+
+clean:
+	rm -fr bower_components node_modules output
 
 build:
 	npm update
