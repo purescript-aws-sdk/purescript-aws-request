@@ -1,0 +1,14 @@
+language: node_js
+node_js: stable
+
+install:
+  - make clean init
+
+script:
+  - make build test
+
+deploy:
+  provider: script
+  script: make release
+  on:
+    branch: master
