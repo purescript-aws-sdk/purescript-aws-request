@@ -7,6 +7,6 @@ jobs:
     steps:
       - checkout
 
-      - run: npm install -g bower purescript pulp
+      - run: sudo npm install -g bower purescript pulp
       - run: make clean init
       - run: make build test
