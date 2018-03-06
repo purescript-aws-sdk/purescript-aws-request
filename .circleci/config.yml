@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.7.1
+
+    steps:
+      - checkout
+      - run:
+        command: |
+          npm install -g bower purescript pulp
+          make clean init
+          make build test
