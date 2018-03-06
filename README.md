@@ -1,6 +1,6 @@
 # purescript-aws-request
 
-[![Build Status](https://app.wercker.com/status/066f6286d431945820de57d69bf17600/s/master)](https://app.wercker.com/project/byKey/066f6286d431945820de57d69bf17600)
+[![Build Status](https://app.wercker.com/status/5909b9e96d1080804b17a28f72f87b6b/s/master)](https://app.wercker.com/project/byKey/5909b9e96d1080804b17a28f72f87b6b)
 
 ## Getting started
 
