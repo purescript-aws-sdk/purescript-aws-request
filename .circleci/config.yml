@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.7.1
+
+    steps:
+      - checkout
+
+      - run: wget -qO- https://get.haskellstack.org/ | sh
+      - run: sudo npm install -g bower purescript pulp
+
+      - run: make clean init
+      - run: make build test
+
+  # deploy:
+  #   steps:
+  #     - checkout
+  #     - run: make release
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      # - deploy:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: master
