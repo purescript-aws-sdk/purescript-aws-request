@@ -9,7 +9,7 @@ import Control.Monad.Eff.Exception (EXCEPTION, Error, error, message)
 import Data.Either (Either(..))
 import Data.Foreign (Foreign)
 
-import AWS.Request (ServiceName, MethodName, request)
+import AWS.Request (ServiceName(..), MethodName(..), request)
 import AWS.Request.Types (NoInput(..))
 
 main :: forall eff. Eff (exception :: EXCEPTION, console :: CONSOLE | eff) (Fiber (exception :: EXCEPTION, console :: CONSOLE | eff) Unit)

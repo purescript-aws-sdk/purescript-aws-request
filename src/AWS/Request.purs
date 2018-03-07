@@ -1,5 +1,5 @@
-module AWS.Request ( ServiceName
-                   , MethodName
+module AWS.Request ( ServiceName(..)
+                   , MethodName(..)
                    , request
                    , nouJust
                    , nouNothing
