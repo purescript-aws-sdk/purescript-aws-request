@@ -1,4 +1,6 @@
-module AWS.Request ( request
+module AWS.Request ( ServiceName
+                   , MethodName
+                   , request
                    , nouJust
                    , nouNothing
                    ) where
@@ -14,9 +16,12 @@ import F (liftF)
 import Prelude
 import Data.Maybe (Maybe(..))
 
+newtype ServiceName = ServiceName String
+newtype MethodName = MethodName String
+
 foreign import requestImpl :: forall eff. String -> String -> Foreign -> EffFnAff (exception :: EXCEPTION | eff) Foreign
-request :: forall eff i o. Encode i => Decode o => String -> String -> i -> Aff (exception :: EXCEPTION | eff) o
-request service method i = do
+request :: forall eff i o. Encode i => Decode o => ServiceName -> MethodName -> i -> Aff (exception :: EXCEPTION | eff) o
+request (ServiceName service) (MethodName method) i = do
     let fi = encode i
     fo <- requestImpl service method fi # fromEffFnAff
     decode fo # liftF # liftEff
