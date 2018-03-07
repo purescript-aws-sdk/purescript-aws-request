@@ -19,3 +19,4 @@ test:
 release:
 	pulp version ${VERSION}
 	yes | pulp publish --no-push
+	git push origin --tags
