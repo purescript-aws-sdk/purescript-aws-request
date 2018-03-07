@@ -1,6 +1,5 @@
 {
     "dependencies": {
-        "aws-sdk": "^2.203.0",
-        "help": "^3.0.2"
+        "aws-sdk": "^2.203.0"
     }
 }
