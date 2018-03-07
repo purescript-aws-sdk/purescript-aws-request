@@ -9,7 +9,7 @@ import Control.Monad.Eff.Exception (EXCEPTION, Error, error, message)
 import Data.Either (Either(..))
 import Data.Foreign (Foreign)
 
-import AWS.Request (request)
+import AWS.Request (ServiceName, MethodName, request)
 import AWS.Request.Types (NoInput(..))
 
 main :: forall eff. Eff (exception :: EXCEPTION, console :: CONSOLE | eff) (Fiber (exception :: EXCEPTION, console :: CONSOLE | eff) Unit)
@@ -25,7 +25,7 @@ main = launchAff do
 
 testRequestUnknownService :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 testRequestUnknownService = do
-    errOrSuccess :: Either Error Foreign <- attempt $ request "unknown" "" (NoInput unit)
+    errOrSuccess :: Either Error Foreign <- attempt $ request (ServiceName "unknown") (MethodName "") (NoInput unit)
     case errOrSuccess of
         Right succ -> throwError $ error "AWS service unknown shouldn't exist"
         Left err -> if (message err) == "awsSdk[serviceName] is not a constructor"
@@ -34,7 +34,7 @@ testRequestUnknownService = do
 
 testRequestUnknownMethod :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 testRequestUnknownMethod = do
-    errOrSuccess :: Either Error Foreign <- attempt $ request "S3" "unknown" (NoInput unit)
+    errOrSuccess :: Either Error Foreign <- attempt $ request (ServiceName "S3") (MethodName "unknown") (NoInput unit)
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 method unknown shouldn't exist"
         Left err -> if (message err) == "awsService[methodName] is not a function"
@@ -43,7 +43,7 @@ testRequestUnknownMethod = do
 
 testRequestMissingParameters :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 testRequestMissingParameters = do
-    errOrSuccess :: Either Error Foreign <- attempt $ request "S3" "getBucketVersioning" (NoInput unit)
+    errOrSuccess :: Either Error Foreign <- attempt $ request (ServiceName "S3") (MethodName "getBucketVersioning") (NoInput unit)
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 getBucketVersioning should require parameters"
         Left err -> if (message err) == "Missing required key 'Bucket' in params"
