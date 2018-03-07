@@ -1,5 +1,6 @@
 # purescript-aws-request
 
+[![Latest Release](https://pursuit.purescript.org/packages/purescript-aws-request/badge)](https://pursuit.purescript.org/packages/purescript-aws-request)
 [![Build Status](https://app.wercker.com/status/5909b9e96d1080804b17a28f72f87b6b/s/master)](https://app.wercker.com/project/byKey/5909b9e96d1080804b17a28f72f87b6b)
 
 ## Getting started
