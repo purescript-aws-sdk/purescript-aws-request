@@ -17,6 +17,9 @@ build:
           git config --global user.email "p.vinchon@gmail.com"
           git config --global user.name "Philippe Vinchon via CI"
 
+          echo Configure pulp...
+          echo $GITHUB_TOKEN | pulp login
+
     - script:
         name: build
         code: |
