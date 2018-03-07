@@ -18,4 +18,4 @@ test:
 
 release:
 	pulp version ${VERSION}
-	yes | pulp publish
+	yes | pulp publish --no-push
