@@ -38,7 +38,6 @@ build:
         code: |
           echo Testing project...
           make test
-          make release
 
     - script:
         name: deploy
