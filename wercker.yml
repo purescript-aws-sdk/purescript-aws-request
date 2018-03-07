@@ -10,8 +10,12 @@ build:
           wget -qO- https://get.haskellstack.org/ | sh
 
           echo Installing purescript...
-          npm install --global --unsafe-perm=true bower purescript pulp
           echo '{ "allow_root": true }' > /root/.bowerrc
+          npm install --global --unsafe-perm=true bower purescript pulp
+
+          echo Configurring git...
+          git config --global user.email "p.vinchon@gmail.com"
+          git config --global user.name "Philippe Vinchon via CI"
 
     - script:
         name: build
