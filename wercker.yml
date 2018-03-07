@@ -32,6 +32,7 @@ build:
         code: |
           echo Building project...
           make clean init build
+          make release
 
     - script:
         name: test
