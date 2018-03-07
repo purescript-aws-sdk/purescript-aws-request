@@ -25,7 +25,7 @@ build:
           git config --global user.name "Philippe Vinchon via CI"
 
           echo Configure pulp...
-          echo $GITHUB_TOKEN | pulp login
+          echo $GITHUB_PULP_TOKEN | pulp login
 
     - script:
         name: build
