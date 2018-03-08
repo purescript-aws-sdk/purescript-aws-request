@@ -1,7 +1,7 @@
 .PHONY: clean init build test release
 .DEFAULT_GOAL := build
 
-VERSION := 0.0.$(shell git log --oneline | wc -l | tr -d '[:space:]')
+VERSION := patch
 
 clean:
 	rm -fr bower_components node_modules output
