@@ -1,7 +1,7 @@
 .PHONY: clean init build test release
 .DEFAULT_GOAL := build
 
-VERSION := patch
+VERSION ?= patch
 
 clean:
 	rm -fr bower_components node_modules output
