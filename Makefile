@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := build
 
 VERSION_MAJ_MIN := 0.1
-VERSION := ${VERSION_MAJ_MIN}.$$(git fetch --tags && git tag -l v${VERSION_MAJ_MIN}.* | wc -l | tr -d '[:space:]')
+VERSION := ${VERSION_MAJ_MIN}.$$((1 + $$(git fetch --tags && git fetch --tags && git tag -l v${VERSION_MAJ_MIN}.[^0] | wc -l)))
 
 clean:
 	rm -fr bower_components node_modules output
