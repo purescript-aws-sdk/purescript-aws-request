@@ -17,7 +17,7 @@ build:
 
 test:
 	pulp test
-	pulp doc && mv generated-docs docs
+	pulp docs && mv generated-docs docs
 	if [ -z "$$(git status --porcelain)" ]; then \
 		$(error You have unstaged changes); \
 	fi
