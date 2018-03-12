@@ -2,7 +2,8 @@
 .DEFAULT_GOAL := build
 
 VERSION_MAJ_MIN := 0.1
-VERSION := ${VERSION_MAJ_MIN}.$$((1 + $$(git fetch --tags && git tag -l v${VERSION_MAJ_MIN}.[^0] | wc -l)))
+VERSION_PATCH := $(shell git tag -l v${VERSION_MAJ_MIN}.[^0] | wc -l | tr -d '[:space:]')
+VERSION := ${VERSION_MAJ_MIN}.$$((${VERSION_PATCH} + 1))
 
 clean:
 	rm -fr bower_components node_modules output
@@ -18,6 +19,6 @@ test:
 	pulp test
 
 release:
-	pulp version ${VERSION}
+	yes c | pulp version ${VERSION}
 	yes | pulp publish --no-push
 	git push origin --tags
