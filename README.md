@@ -12,4 +12,4 @@ npm install aws-sdk # bower package seems broken :(
 
 ## Documentation
 
-Module documentation is [published on Pursuit](http://pursuit.purescript.org/packages/purescript-aws-request).
+Module documentation is [published on GitHub](https://github.com/purescript-aws-sdk/purescript-aws-request/tree/master/docs).
