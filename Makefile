@@ -17,6 +17,10 @@ build:
 
 test:
 	pulp test
+	pulp doc && mv generated-docs docs
+	if [ -z "$$(git status --porcelain)" ]; then \
+		$(error You have unstaged changes); \
+	fi
 
 release:
 ifneq ($(shell git rev-parse --abbrev-ref HEAD), master)
