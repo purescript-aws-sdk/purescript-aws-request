@@ -30,4 +30,5 @@ ifneq ($(shell git status --porcelain),)
 endif
 
 	yes c | pulp version ${VERSION}
-	yes | pulp publish
+	yes | pulp publish --no-push
+	git push origin --tags
