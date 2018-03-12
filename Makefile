@@ -33,7 +33,6 @@ ifneq ($(shell git status --porcelain),)
 	$(error Cannot release: You have unstaged changes)
 endif
 
-	yes c | pulp version ${VERSION}
-	yes | pulp publish --no-push
+	git tag v${VERSION}
 	git push origin --tags
 	git reset --hard origin/master
