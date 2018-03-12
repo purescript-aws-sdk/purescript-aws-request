@@ -32,3 +32,4 @@ endif
 	yes c | pulp version ${VERSION}
 	yes | pulp publish --no-push
 	git push origin --tags
+	git reset --hard origin/master
