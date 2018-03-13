@@ -18,7 +18,7 @@ build:
 test:
 	pulp test
 	pulp docs && rm -fr docs && mv generated-docs docs
-	[ -z "$$(git status --porcelain)" ] || (echo "Unstaged changes" && exit 1)
+	[ -z "$$(git status --porcelain)" ] || (echo "Generated content not commited" && exit 1)
 
 release:
 	git tag v${VERSION}
