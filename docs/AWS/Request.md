@@ -1,12 +1,5 @@
 ## Module AWS.Request
 
-#### `ServiceName`
-
-``` purescript
-newtype ServiceName
-  = ServiceName String
-```
-
 #### `MethodName`
 
 ``` purescript
@@ -17,19 +10,7 @@ newtype MethodName
 #### `request`
 
 ``` purescript
-request :: forall eff i o. Encode i => Decode o => ServiceName -> MethodName -> i -> Aff (exception :: EXCEPTION | eff) o
-```
-
-#### `nouJust`
-
-``` purescript
-nouJust :: forall a. a -> NullOrUndefined a
-```
-
-#### `nouNothing`
-
-``` purescript
-nouNothing :: forall a. NullOrUndefined a
+request :: forall eff i o. Encode i => Decode o => Service -> MethodName -> i -> Aff (exception :: EXCEPTION | eff) o
 ```
 
 
