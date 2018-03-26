@@ -12,3 +12,17 @@ npm install aws-sdk # bower package seems broken :(
 ## Documentation
 
 Module documentation is [published on GitHub](https://github.com/purescript-aws-sdk/purescript-aws-request/tree/master/docs).
+
+## Warning: Missing service options
+
+AWS services can be created with a set of options. Most of those are currently supported, but a handful are missing.
+
+- `sessionToken` (`AWS.Credentials`)
+- `credentials` (`AWS.Credentials`)
+- `credentialProvider` (`AWS.CredentialProviderChain`)
+- `paramValidation` (`Boolean`, `Map`)
+- `retryDelayOptions` (`Map`)
+- `httpOptions` (`Map`)
+- `apiVersion` (`String`, `Date`)
+- `apiVersions` (`Map`)
+- `logger` (`Object`)
