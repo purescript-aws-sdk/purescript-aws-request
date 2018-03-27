@@ -4,12 +4,16 @@ import Prelude (Unit, bind, pure, unit, ($), (==))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION, message, throw, throwException, try)
 import Data.Either (Either(..))
+import Data.Foreign.NullOrUndefined (NullOrUndefined(..))
+import Data.Maybe (Maybe(..))
+import Data.Newtype (unwrap)
 
-import AWS.Service (ServiceName(..), defaultOptions, service)
+import AWS.Service
 
 main :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
 main = do
     _ <- testUnknownService
+    _ <- testUpdateOptions
     pure unit
 
 testUnknownService :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
@@ -20,3 +24,10 @@ testUnknownService = do
         Left err -> if (message err) == "awsSdk[serviceName] is not a constructor"
             then pure unit
             else throwException err
+
+testUpdateOptions :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
+testUpdateOptions = do
+    let newHttpOptions = defaultHttpOptions' $ _ { proxy = NullOrUndefined (Just "new-proxy") }
+    let newOptions = defaultOptions' $ _ { httpOptions = NullOrUndefined (Just newHttpOptions) }
+    _ <- service (ServiceName "S3") newOptions
+    pure unit

@@ -17,12 +17,14 @@ Module documentation is [published on GitHub](https://github.com/purescript-aws-
 
 AWS services can be created with a set of options. Most of those are currently supported, but a handful are missing.
 
-- `sessionToken` (`AWS.Credentials`)
-- `credentials` (`AWS.Credentials`)
-- `credentialProvider` (`AWS.CredentialProviderChain`)
-- `paramValidation` (`Boolean`, `Map`)
-- `retryDelayOptions` (`Map`)
-- `httpOptions` (`Map`)
-- `apiVersion` (`String`, `Date`)
-- `apiVersions` (`Map`)
-- `logger` (`Object`)
+- `sessionToken` is missing
+- `credentials` is missing
+- `credentialProvider` is missing
+- `logger` is missing
+
+- `paramValidation` can't be a `Boolean`
+- `apiVersion` can't be a `Date`
+- `apiVersions` can't contain `Date` objects
+
+- `retryDelayOptions` is missing the `customBackoff` property
+- `httpOptions` is missing the `agent` property
