@@ -6,7 +6,7 @@
 
 ```sh
 bower install purescript-aws-request
-npm install aws-sdk # bower package seems broken :(
+npm install aws-sdk # bower package doesn't work :(
 ```
 
 ## Documentation
