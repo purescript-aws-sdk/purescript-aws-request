@@ -1,5 +1,11 @@
 ## Module AWS.Service
 
+#### `genericEncode`
+
+``` purescript
+genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
+```
+
 #### `OptionsType`
 
 ``` purescript
