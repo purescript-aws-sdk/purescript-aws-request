@@ -6,7 +6,6 @@ import Control.Monad.Eff.Exception (EXCEPTION, message, throw, throwException, t
 import Data.Either (Either(..))
 import Data.Foreign.NullOrUndefined (NullOrUndefined(..))
 import Data.Maybe (Maybe(..))
-import Data.Newtype (unwrap)
 
 import AWS.Service
 
