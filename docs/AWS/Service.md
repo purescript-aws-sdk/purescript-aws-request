@@ -9,7 +9,7 @@ genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreig
 #### `OptionsType`
 
 ``` purescript
-type OptionsType = { params :: NullOrUndefined (StrMap String), endpoint :: NullOrUndefined String, accessKeyId :: NullOrUndefined String, secretAccessKey :: NullOrUndefined String, region :: NullOrUndefined String, maxRetries :: NullOrUndefined Int, maxRedirects :: NullOrUndefined Int, sslEnabled :: NullOrUndefined Boolean, paramValidation :: NullOrUndefined ParamValidation, computeChecksums :: NullOrUndefined Boolean, convertResponseTypes :: NullOrUndefined Boolean, correctClockSkew :: NullOrUndefined Boolean, s3ForcePathStyle :: NullOrUndefined Boolean, s3BucketEndpoint :: NullOrUndefined Boolean, s3DisableBodySigning :: NullOrUndefined Boolean, retryDelayOptions :: NullOrUndefined RetryDelayOptions, httpOptions :: NullOrUndefined HttpOptions, apiVersion :: NullOrUndefined String, apiVersions :: NullOrUndefined (StrMap String), systemClockOffset :: NullOrUndefined Int, signatureVersion :: NullOrUndefined String, signatureCache :: NullOrUndefined Boolean, dynamoDbCrc32 :: NullOrUndefined Boolean }
+type OptionsType = { params :: Maybe (StrMap String), endpoint :: Maybe String, accessKeyId :: Maybe String, secretAccessKey :: Maybe String, region :: Maybe String, maxRetries :: Maybe Int, maxRedirects :: Maybe Int, sslEnabled :: Maybe Boolean, paramValidation :: Maybe ParamValidation, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, retryDelayOptions :: Maybe RetryDelayOptions, httpOptions :: Maybe HttpOptions, apiVersion :: Maybe String, apiVersions :: Maybe (StrMap String), systemClockOffset :: Maybe Int, signatureVersion :: Maybe String, signatureCache :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean }
 ```
 
 #### `Options`
@@ -42,7 +42,7 @@ defaultOptions' :: (OptionsType -> OptionsType) -> Options
 #### `ParamValidationType`
 
 ``` purescript
-type ParamValidationType = { min :: NullOrUndefined Boolean, max :: NullOrUndefined Boolean, pattern :: NullOrUndefined Boolean, enum :: NullOrUndefined Boolean }
+type ParamValidationType = { min :: Maybe Boolean, max :: Maybe Boolean, pattern :: Maybe Boolean, enum :: Maybe Boolean }
 ```
 
 #### `ParamValidation`
@@ -75,7 +75,7 @@ defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> Param
 #### `RetryDelayOptionsType`
 
 ``` purescript
-type RetryDelayOptionsType = { base :: NullOrUndefined Int }
+type RetryDelayOptionsType = { base :: Maybe Int }
 ```
 
 #### `RetryDelayOptions`
@@ -108,7 +108,7 @@ defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) ->
 #### `HttpOptionsType`
 
 ``` purescript
-type HttpOptionsType = { proxy :: NullOrUndefined String, connectTimeout :: NullOrUndefined Int, timeout :: NullOrUndefined Int, xhrAsync :: NullOrUndefined Boolean, xhrWithCredentials :: NullOrUndefined Boolean }
+type HttpOptionsType = { proxy :: Maybe String, connectTimeout :: Maybe Int, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
 ```
 
 #### `HttpOptions`

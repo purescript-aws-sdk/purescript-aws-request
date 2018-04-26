@@ -15,36 +15,6 @@ Decode NoArguments
 Encode NoArguments
 ```
 
-#### `NoOutput`
-
-``` purescript
-newtype NoOutput
-  = NoOutput Unit
-```
-
-##### Instances
-``` purescript
-Generic NoOutput _
-Show NoOutput
-Decode NoOutput
-Encode NoOutput
-```
-
-#### `NoInput`
-
-``` purescript
-newtype NoInput
-  = NoInput Unit
-```
-
-##### Instances
-``` purescript
-Generic NoInput _
-Show NoInput
-Decode NoInput
-Encode NoInput
-```
-
 #### `Timestamp`
 
 ``` purescript
