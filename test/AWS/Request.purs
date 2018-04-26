@@ -9,7 +9,6 @@ import Data.Foreign (Foreign)
 
 import AWS.Service (ServiceName(..), service, defaultOptions)
 import AWS.Request (MethodName(..), request)
-import AWS.Request.Types (NoInput(..))
 
 main :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 main = do
@@ -21,7 +20,7 @@ main = do
 testRequestUnknownMethod :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 testRequestUnknownMethod = do
     s3 <- liftEff $ service (ServiceName "S3") defaultOptions
-    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "unknown") (NoInput unit)
+    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "unknown") unit
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 method unknown shouldn't exist"
         Left err -> if (message err) == "service[methodName] is not a function"
@@ -31,7 +30,7 @@ testRequestUnknownMethod = do
 testRequestMissingParameters :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
 testRequestMissingParameters = do
     s3 <- liftEff $ service (ServiceName "S3") defaultOptions
-    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") (NoInput unit)
+    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") unit
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 getBucketVersioning should require parameters"
         Left err -> if (message err) == "Missing required key 'Bucket' in params"
