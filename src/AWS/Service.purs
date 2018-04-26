@@ -7,7 +7,6 @@ import Data.Foreign (Foreign)
 import Data.Foreign.Class (class Encode, encode)
 import Data.Foreign.Generic as Generic
 import Data.Foreign.Generic.Class (class GenericEncode)
-import Data.Foreign.NullOrUndefined (NullOrUndefined(..))
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
@@ -45,29 +44,29 @@ genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleCon
 -- signatureCache (Boolean) — whether the signature to sign requests with (overriding the API configuration) is cached. Only applies to the signature version 'v4'. Defaults to true.
 -- dynamoDbCrc32 (Boolean) — whether to validate the CRC32 checksum of HTTP response bodies returned by DynamoDB. Default: true.
 type OptionsType =
-    { params :: NullOrUndefined (StrMap String)
-    , endpoint :: NullOrUndefined String
-    , accessKeyId :: NullOrUndefined String
-    , secretAccessKey :: NullOrUndefined String
-    , region :: NullOrUndefined String
-    , maxRetries :: NullOrUndefined Int
-    , maxRedirects :: NullOrUndefined Int
-    , sslEnabled :: NullOrUndefined Boolean
-    , paramValidation :: NullOrUndefined ParamValidation
-    , computeChecksums :: NullOrUndefined Boolean
-    , convertResponseTypes :: NullOrUndefined Boolean
-    , correctClockSkew :: NullOrUndefined Boolean
-    , s3ForcePathStyle :: NullOrUndefined Boolean
-    , s3BucketEndpoint :: NullOrUndefined Boolean
-    , s3DisableBodySigning :: NullOrUndefined Boolean
-    , retryDelayOptions :: NullOrUndefined RetryDelayOptions
-    , httpOptions :: NullOrUndefined HttpOptions
-    , apiVersion :: NullOrUndefined String
-    , apiVersions :: NullOrUndefined (StrMap String)
-    , systemClockOffset :: NullOrUndefined Int
-    , signatureVersion :: NullOrUndefined String
-    , signatureCache :: NullOrUndefined Boolean
-    , dynamoDbCrc32 :: NullOrUndefined Boolean
+    { params :: Maybe (StrMap String)
+    , endpoint :: Maybe String
+    , accessKeyId :: Maybe String
+    , secretAccessKey :: Maybe String
+    , region :: Maybe String
+    , maxRetries :: Maybe Int
+    , maxRedirects :: Maybe Int
+    , sslEnabled :: Maybe Boolean
+    , paramValidation :: Maybe ParamValidation
+    , computeChecksums :: Maybe Boolean
+    , convertResponseTypes :: Maybe Boolean
+    , correctClockSkew :: Maybe Boolean
+    , s3ForcePathStyle :: Maybe Boolean
+    , s3BucketEndpoint :: Maybe Boolean
+    , s3DisableBodySigning :: Maybe Boolean
+    , retryDelayOptions :: Maybe RetryDelayOptions
+    , httpOptions :: Maybe HttpOptions
+    , apiVersion :: Maybe String
+    , apiVersions :: Maybe (StrMap String)
+    , systemClockOffset :: Maybe Int
+    , signatureVersion :: Maybe String
+    , signatureCache :: Maybe Boolean
+    , dynamoDbCrc32 :: Maybe Boolean
     }
 
 newtype Options = Options OptionsType
@@ -78,29 +77,29 @@ instance encodeOptions :: Encode Options where encode = genericEncode
 
 defaultOptions :: Options
 defaultOptions = Options
-    { params: NullOrUndefined Nothing
-    , endpoint: NullOrUndefined Nothing
-    , accessKeyId: NullOrUndefined Nothing
-    , secretAccessKey: NullOrUndefined Nothing
-    , region: NullOrUndefined Nothing
-    , maxRetries: NullOrUndefined Nothing
-    , maxRedirects: NullOrUndefined Nothing
-    , sslEnabled: NullOrUndefined Nothing
-    , paramValidation: NullOrUndefined Nothing
-    , computeChecksums: NullOrUndefined Nothing
-    , convertResponseTypes: NullOrUndefined Nothing
-    , correctClockSkew: NullOrUndefined Nothing
-    , s3ForcePathStyle: NullOrUndefined Nothing
-    , s3BucketEndpoint: NullOrUndefined Nothing
-    , s3DisableBodySigning: NullOrUndefined Nothing
-    , retryDelayOptions: NullOrUndefined Nothing
-    , httpOptions: NullOrUndefined Nothing
-    , apiVersion: NullOrUndefined Nothing
-    , apiVersions: NullOrUndefined Nothing
-    , systemClockOffset: NullOrUndefined Nothing
-    , signatureVersion: NullOrUndefined Nothing
-    , signatureCache: NullOrUndefined Nothing
-    , dynamoDbCrc32: NullOrUndefined Nothing
+    { params: Nothing
+    , endpoint: Nothing
+    , accessKeyId: Nothing
+    , secretAccessKey: Nothing
+    , region: Nothing
+    , maxRetries: Nothing
+    , maxRedirects: Nothing
+    , sslEnabled: Nothing
+    , paramValidation: Nothing
+    , computeChecksums: Nothing
+    , convertResponseTypes: Nothing
+    , correctClockSkew: Nothing
+    , s3ForcePathStyle: Nothing
+    , s3BucketEndpoint: Nothing
+    , s3DisableBodySigning: Nothing
+    , retryDelayOptions: Nothing
+    , httpOptions: Nothing
+    , apiVersion: Nothing
+    , apiVersions: Nothing
+    , systemClockOffset: Nothing
+    , signatureVersion: Nothing
+    , signatureCache: Nothing
+    , dynamoDbCrc32: Nothing
     }
 
 defaultOptions' :: (OptionsType -> OptionsType) -> Options
@@ -112,10 +111,10 @@ defaultOptions' f = over Options f defaultOptions
 --   - pattern [Boolean] — Validates that a string value matches a regular expression.
 --   - enum [Boolean] — Validates that a string value matches one of the allowable enum values.
 type ParamValidationType =
-    { min :: NullOrUndefined Boolean
-    , max :: NullOrUndefined Boolean
-    , pattern :: NullOrUndefined Boolean
-    , enum :: NullOrUndefined Boolean
+    { min :: Maybe Boolean
+    , max :: Maybe Boolean
+    , pattern :: Maybe Boolean
+    , enum :: Maybe Boolean
     }
 
 newtype ParamValidation = ParamValidation ParamValidationType
@@ -126,10 +125,10 @@ instance encodeParamValidation :: Encode ParamValidation where encode = genericE
 
 defaultParamValidation :: ParamValidation
 defaultParamValidation = ParamValidation
-    { min: NullOrUndefined Nothing
-    , max: NullOrUndefined Nothing
-    , pattern: NullOrUndefined Nothing
-    , enum: NullOrUndefined Nothing
+    { min: Nothing
+    , max: Nothing
+    , pattern: Nothing
+    , enum: Nothing
     }
 
 defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> ParamValidation
@@ -139,7 +138,7 @@ defaultParamValidation' f = over ParamValidation f defaultParamValidation
 --   - base [Integer] — The base number of milliseconds to use in the exponential backoff for operation retries. Defaults to 100 ms for all services except DynamoDB, where it defaults to 50ms.
 --   - customBackoff [function] — A custom function that accepts a retry count and returns the amount of time to delay in milliseconds. The base option will be ignored if this option is supplied.
 type RetryDelayOptionsType =
-    { base :: NullOrUndefined Int
+    { base :: Maybe Int
     }
 
 newtype RetryDelayOptions = RetryDelayOptions RetryDelayOptionsType
@@ -150,7 +149,7 @@ instance encodeRetryDelayOptions :: Encode RetryDelayOptions where encode = gene
 
 defaultRetryDelayOptions :: RetryDelayOptions
 defaultRetryDelayOptions = RetryDelayOptions
-    { base: NullOrUndefined Nothing
+    { base: Nothing
     }
 
 defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) -> RetryDelayOptions
@@ -164,11 +163,11 @@ defaultRetryDelayOptions' f = over RetryDelayOptions f defaultRetryDelayOptions
 --   - xhrAsync [Boolean] — Whether the SDK will send asynchronous HTTP requests. Used in the browser environment only. Set to false to send requests synchronously. Defaults to true (async on).
 --   - xhrWithCredentials [Boolean] — Sets the "withCredentials" property of an XMLHttpRequest object. Used in the browser environment only. Defaults to false.
 type HttpOptionsType =
-    { proxy :: NullOrUndefined String
-    , connectTimeout :: NullOrUndefined Int
-    , timeout :: NullOrUndefined Int
-    , xhrAsync :: NullOrUndefined Boolean
-    , xhrWithCredentials :: NullOrUndefined Boolean
+    { proxy :: Maybe String
+    , connectTimeout :: Maybe Int
+    , timeout :: Maybe Int
+    , xhrAsync :: Maybe Boolean
+    , xhrWithCredentials :: Maybe Boolean
     }
 
 newtype HttpOptions = HttpOptions HttpOptionsType
@@ -179,11 +178,11 @@ instance encodeHttpOptions :: Encode HttpOptions where encode = genericEncode
 
 defaultHttpOptions :: HttpOptions
 defaultHttpOptions = HttpOptions
-    { proxy: NullOrUndefined Nothing
-    , connectTimeout: NullOrUndefined Nothing
-    , timeout: NullOrUndefined Nothing
-    , xhrAsync: NullOrUndefined Nothing
-    , xhrWithCredentials: NullOrUndefined Nothing
+    { proxy: Nothing
+    , connectTimeout: Nothing
+    , timeout: Nothing
+    , xhrAsync: Nothing
+    , xhrWithCredentials: Nothing
     }
 
 defaultHttpOptions' :: (HttpOptionsType -> HttpOptionsType) -> HttpOptions

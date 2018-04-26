@@ -4,7 +4,6 @@ import Prelude (Unit, bind, pure, unit, ($), (==))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION, message, throw, throwException, try)
 import Data.Either (Either(..))
-import Data.Foreign.NullOrUndefined (NullOrUndefined(..))
 import Data.Maybe (Maybe(..))
 
 import AWS.Service
@@ -26,7 +25,7 @@ testUnknownService = do
 
 testUpdateOptions :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
 testUpdateOptions = do
-    let newHttpOptions = defaultHttpOptions' $ _ { proxy = NullOrUndefined (Just "new-proxy") }
-    let newOptions = defaultOptions' $ _ { httpOptions = NullOrUndefined (Just newHttpOptions) }
+    let newHttpOptions = defaultHttpOptions' $ _ { proxy = Just "new-proxy" }
+    let newOptions = defaultOptions' $ _ { httpOptions = Just newHttpOptions }
     _ <- service (ServiceName "S3") newOptions
     pure unit
