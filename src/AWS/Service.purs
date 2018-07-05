@@ -1,20 +1,12 @@
 module AWS.Service where
 
-import Prelude (class Show, bind, pure, ($))
+import Prelude (bind, pure, ($))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import Data.Foreign (Foreign)
-import Data.Foreign.Class (class Encode, encode)
-import Data.Foreign.Generic as Generic
-import Data.Foreign.Generic.Class (class GenericEncode)
-import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
-import Data.Newtype (class Newtype, over)
 import Data.StrMap (StrMap)
-
-genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
-genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleConstructors = true }
+import Simple.JSON (write)
 
 -- params (map) — An optional map of parameters to bind to every request sent by this service object. For more information on bound parameters, see "Working with Services" in the Getting Started Guide.
 -- endpoint (String) — The endpoint URI to send requests to. The default endpoint is built from the configured region. The endpoint should be a string like 'https://{service}.{region}.amazonaws.com'.
@@ -43,7 +35,7 @@ genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleCon
 -- signatureVersion (String) — the signature version to sign requests with (overriding the API configuration). Possible values are: 'v2', 'v3', 'v4'.
 -- signatureCache (Boolean) — whether the signature to sign requests with (overriding the API configuration) is cached. Only applies to the signature version 'v4'. Defaults to true.
 -- dynamoDbCrc32 (Boolean) — whether to validate the CRC32 checksum of HTTP response bodies returned by DynamoDB. Default: true.
-type OptionsType =
+type Options =
     { params :: Maybe (StrMap String)
     , endpoint :: Maybe String
     , accessKeyId :: Maybe String
@@ -69,14 +61,8 @@ type OptionsType =
     , dynamoDbCrc32 :: Maybe Boolean
     }
 
-newtype Options = Options OptionsType
-derive instance newtypeOptions :: Newtype Options _
-derive instance repGenericOptions :: Generic Options _
-instance showOptions :: Show Options where show = genericShow
-instance encodeOptions :: Encode Options where encode = genericEncode
-
-defaultOptions :: Options
-defaultOptions = Options
+options :: Options
+options =
     { params: Nothing
     , endpoint: Nothing
     , accessKeyId: Nothing
@@ -102,58 +88,37 @@ defaultOptions = Options
     , dynamoDbCrc32: Nothing
     }
 
-defaultOptions' :: (OptionsType -> OptionsType) -> Options
-defaultOptions' f = over Options f defaultOptions
-
 -- Whether input parameters should be validated against the operation description before sending the request.
 --   - min [Boolean] — Validates that a value meets the min constraint. This is enabled by default when paramValidation is set to true.
 --   - max [Boolean] — Validates that a value meets the max constraint.
 --   - pattern [Boolean] — Validates that a string value matches a regular expression.
 --   - enum [Boolean] — Validates that a string value matches one of the allowable enum values.
-type ParamValidationType =
+type ParamValidation =
     { min :: Maybe Boolean
     , max :: Maybe Boolean
     , pattern :: Maybe Boolean
     , enum :: Maybe Boolean
     }
 
-newtype ParamValidation = ParamValidation ParamValidationType
-derive instance newtypeParamValidation :: Newtype ParamValidation _
-derive instance repGenericParamValidation :: Generic ParamValidation _
-instance showParamValidation :: Show ParamValidation where show = genericShow
-instance encodeParamValidation :: Encode ParamValidation where encode = genericEncode
-
-defaultParamValidation :: ParamValidation
-defaultParamValidation = ParamValidation
+paramValidation :: ParamValidation
+paramValidation =
     { min: Nothing
     , max: Nothing
     , pattern: Nothing
     , enum: Nothing
     }
 
-defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> ParamValidation
-defaultParamValidation' f = over ParamValidation f defaultParamValidation
-
 -- A set of options to configure the retry delay on retryable errors.
 --   - base [Integer] — The base number of milliseconds to use in the exponential backoff for operation retries. Defaults to 100 ms for all services except DynamoDB, where it defaults to 50ms.
 --   - customBackoff [function] — A custom function that accepts a retry count and returns the amount of time to delay in milliseconds. The base option will be ignored if this option is supplied.
-type RetryDelayOptionsType =
+type RetryDelayOptions =
     { base :: Maybe Int
     }
 
-newtype RetryDelayOptions = RetryDelayOptions RetryDelayOptionsType
-derive instance newtypeRetryDelayOptions :: Newtype RetryDelayOptions _
-derive instance repGenericRetryDelayOptions :: Generic RetryDelayOptions _
-instance showRetryDelayOptions :: Show RetryDelayOptions where show = genericShow
-instance encodeRetryDelayOptions :: Encode RetryDelayOptions where encode = genericEncode
-
-defaultRetryDelayOptions :: RetryDelayOptions
-defaultRetryDelayOptions = RetryDelayOptions
+retryDelayOptions :: RetryDelayOptions
+retryDelayOptions =
     { base: Nothing
     }
-
-defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) -> RetryDelayOptions
-defaultRetryDelayOptions' f = over RetryDelayOptions f defaultRetryDelayOptions
 
 -- A set of options to pass to the low-level HTTP request.
 --   - proxy [String] — the URL to proxy requests through
@@ -162,7 +127,7 @@ defaultRetryDelayOptions' f = over RetryDelayOptions f defaultRetryDelayOptions
 --   - timeout [Int] — Sets the socket to timeout after timeout milliseconds of inactivity on the socket. Defaults to two minutes (120000).
 --   - xhrAsync [Boolean] — Whether the SDK will send asynchronous HTTP requests. Used in the browser environment only. Set to false to send requests synchronously. Defaults to true (async on).
 --   - xhrWithCredentials [Boolean] — Sets the "withCredentials" property of an XMLHttpRequest object. Used in the browser environment only. Defaults to false.
-type HttpOptionsType =
+type HttpOptions =
     { proxy :: Maybe String
     , connectTimeout :: Maybe Int
     , timeout :: Maybe Int
@@ -170,14 +135,8 @@ type HttpOptionsType =
     , xhrWithCredentials :: Maybe Boolean
     }
 
-newtype HttpOptions = HttpOptions HttpOptionsType
-derive instance newtypeHttpOptions :: Newtype HttpOptions _
-derive instance repGenericHttpOptions :: Generic HttpOptions _
-instance showHttpOptions :: Show HttpOptions where show = genericShow
-instance encodeHttpOptions :: Encode HttpOptions where encode = genericEncode
-
-defaultHttpOptions :: HttpOptions
-defaultHttpOptions = HttpOptions
+httpOptions :: HttpOptions
+httpOptions =
     { proxy: Nothing
     , connectTimeout: Nothing
     , timeout: Nothing
@@ -185,14 +144,11 @@ defaultHttpOptions = HttpOptions
     , xhrWithCredentials: Nothing
     }
 
-defaultHttpOptions' :: (HttpOptionsType -> HttpOptionsType) -> HttpOptions
-defaultHttpOptions' f = over HttpOptions f defaultHttpOptions
-
-newtype Service = Service Foreign
-newtype ServiceName = ServiceName String
+type Service = Foreign
+type ServiceName = String
 
 foreign import serviceImpl :: forall eff. String -> Foreign -> Eff (exception :: EXCEPTION | eff) Foreign
 service :: forall eff. ServiceName -> Options -> Eff (exception :: EXCEPTION | eff) Service
-service (ServiceName name) options = do
-    f <- serviceImpl name $ encode options
-    pure $ Service f
+service serviceName options' = do
+    f <- serviceImpl serviceName $ write options'
+    pure $ f
