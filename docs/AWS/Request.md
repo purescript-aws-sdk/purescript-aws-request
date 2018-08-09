@@ -3,7 +3,8 @@
 #### `MethodName`
 
 ``` purescript
-type MethodName = String
+newtype MethodName
+  = MethodName String
 ```
 
 #### `request`

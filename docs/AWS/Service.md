@@ -1,63 +1,155 @@
 ## Module AWS.Service
 
+#### `genericEncode`
+
+``` purescript
+genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
+```
+
+#### `OptionsType`
+
+``` purescript
+type OptionsType = { params :: Maybe (StrMap String), endpoint :: Maybe String, accessKeyId :: Maybe String, secretAccessKey :: Maybe String, region :: Maybe String, maxRetries :: Maybe Int, maxRedirects :: Maybe Int, sslEnabled :: Maybe Boolean, paramValidation :: Maybe ParamValidation, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, retryDelayOptions :: Maybe RetryDelayOptions, httpOptions :: Maybe HttpOptions, apiVersion :: Maybe String, apiVersions :: Maybe (StrMap String), systemClockOffset :: Maybe Int, signatureVersion :: Maybe String, signatureCache :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean }
+```
+
 #### `Options`
 
 ``` purescript
-type Options = { params :: Maybe (StrMap String), endpoint :: Maybe String, accessKeyId :: Maybe String, secretAccessKey :: Maybe String, region :: Maybe String, maxRetries :: Maybe Int, maxRedirects :: Maybe Int, sslEnabled :: Maybe Boolean, paramValidation :: Maybe ParamValidation, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, retryDelayOptions :: Maybe RetryDelayOptions, httpOptions :: Maybe HttpOptions, apiVersion :: Maybe String, apiVersions :: Maybe (StrMap String), systemClockOffset :: Maybe Int, signatureVersion :: Maybe String, signatureCache :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean }
+newtype Options
+  = Options OptionsType
 ```
 
-#### `options`
+##### Instances
+``` purescript
+Newtype Options _
+Generic Options _
+Show Options
+Encode Options
+```
+
+#### `defaultOptions`
 
 ``` purescript
-options :: Options
+defaultOptions :: Options
+```
+
+#### `defaultOptions'`
+
+``` purescript
+defaultOptions' :: (OptionsType -> OptionsType) -> Options
+```
+
+#### `ParamValidationType`
+
+``` purescript
+type ParamValidationType = { min :: Maybe Boolean, max :: Maybe Boolean, pattern :: Maybe Boolean, enum :: Maybe Boolean }
 ```
 
 #### `ParamValidation`
 
 ``` purescript
-type ParamValidation = { min :: Maybe Boolean, max :: Maybe Boolean, pattern :: Maybe Boolean, enum :: Maybe Boolean }
+newtype ParamValidation
+  = ParamValidation ParamValidationType
 ```
 
-#### `paramValidation`
+##### Instances
+``` purescript
+Newtype ParamValidation _
+Generic ParamValidation _
+Show ParamValidation
+Encode ParamValidation
+```
+
+#### `defaultParamValidation`
 
 ``` purescript
-paramValidation :: ParamValidation
+defaultParamValidation :: ParamValidation
+```
+
+#### `defaultParamValidation'`
+
+``` purescript
+defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> ParamValidation
+```
+
+#### `RetryDelayOptionsType`
+
+``` purescript
+type RetryDelayOptionsType = { base :: Maybe Int }
 ```
 
 #### `RetryDelayOptions`
 
 ``` purescript
-type RetryDelayOptions = { base :: Maybe Int }
+newtype RetryDelayOptions
+  = RetryDelayOptions RetryDelayOptionsType
 ```
 
-#### `retryDelayOptions`
+##### Instances
+``` purescript
+Newtype RetryDelayOptions _
+Generic RetryDelayOptions _
+Show RetryDelayOptions
+Encode RetryDelayOptions
+```
+
+#### `defaultRetryDelayOptions`
 
 ``` purescript
-retryDelayOptions :: RetryDelayOptions
+defaultRetryDelayOptions :: RetryDelayOptions
+```
+
+#### `defaultRetryDelayOptions'`
+
+``` purescript
+defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) -> RetryDelayOptions
+```
+
+#### `HttpOptionsType`
+
+``` purescript
+type HttpOptionsType = { proxy :: Maybe String, connectTimeout :: Maybe Int, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
 ```
 
 #### `HttpOptions`
 
 ``` purescript
-type HttpOptions = { proxy :: Maybe String, connectTimeout :: Maybe Int, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
+newtype HttpOptions
+  = HttpOptions HttpOptionsType
 ```
 
-#### `httpOptions`
+##### Instances
+``` purescript
+Newtype HttpOptions _
+Generic HttpOptions _
+Show HttpOptions
+Encode HttpOptions
+```
+
+#### `defaultHttpOptions`
 
 ``` purescript
-httpOptions :: HttpOptions
+defaultHttpOptions :: HttpOptions
+```
+
+#### `defaultHttpOptions'`
+
+``` purescript
+defaultHttpOptions' :: (HttpOptionsType -> HttpOptionsType) -> HttpOptions
 ```
 
 #### `Service`
 
 ``` purescript
-type Service = Foreign
+newtype Service
+  = Service Foreign
 ```
 
 #### `ServiceName`
 
 ``` purescript
-type ServiceName = String
+newtype ServiceName
+  = ServiceName String
 ```
 
 #### `serviceImpl`
