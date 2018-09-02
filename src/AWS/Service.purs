@@ -1,20 +1,31 @@
 module AWS.Service where
 
 import Prelude (class Show, bind, pure, ($))
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Data.Foreign (Foreign)
-import Data.Foreign.Class (class Encode, encode)
-import Data.Foreign.Generic as Generic
-import Data.Foreign.Generic.Class (class GenericEncode)
+import Foreign (F, Foreign)
+import Foreign.Class (class Decode, class Encode, encode)
+import Foreign.Generic as Generic
+import Foreign.Generic.Class (class GenericDecode, class GenericEncode)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
+import Data.Map.Internal (Map)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, over)
-import Data.StrMap (StrMap)
+import Effect (Effect)
+
+genericDeEncodeOptions = Generic.defaultOptions { unwrapSingleConstructors = true }
+
+genericDecode :: forall a rep. Generic a rep => GenericDecode rep => Foreign -> F a
+genericDecode = Generic.genericDecode genericDeEncodeOptions
 
 genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
-genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleConstructors = true }
+genericEncode = Generic.genericEncode genericDeEncodeOptions
+
+newtype StrMap a = StrMap (Map String a)
+derive instance newtypeStrMap :: Newtype (StrMap a) _
+derive instance repGenericStrMap :: Generic (StrMap a) _
+instance showStrMap :: Show a => Show (StrMap a) where show = genericShow
+instance decodeStrMap :: Decode a => Decode (StrMap a) where decode = genericDecode
+instance encodeStrMap :: Encode a => Encode (StrMap a) where encode = genericEncode
 
 -- params (map) — An optional map of parameters to bind to every request sent by this service object. For more information on bound parameters, see "Working with Services" in the Getting Started Guide.
 -- endpoint (String) — The endpoint URI to send requests to. The default endpoint is built from the configured region. The endpoint should be a string like 'https://{service}.{region}.amazonaws.com'.
@@ -191,8 +202,8 @@ defaultHttpOptions' f = over HttpOptions f defaultHttpOptions
 newtype Service = Service Foreign
 newtype ServiceName = ServiceName String
 
-foreign import serviceImpl :: forall eff. String -> Foreign -> Eff (exception :: EXCEPTION | eff) Foreign
-service :: forall eff. ServiceName -> Options -> Eff (exception :: EXCEPTION | eff) Service
+foreign import serviceImpl :: String -> Foreign -> Effect Foreign
+service :: ServiceName -> Options -> Effect Service
 service (ServiceName name) options = do
     f <- serviceImpl name $ encode options
     pure $ Service f

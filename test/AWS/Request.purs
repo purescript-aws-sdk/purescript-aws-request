@@ -1,11 +1,11 @@
 module Test.AWS.Request where
 
 import Prelude (Unit, bind, pure, unit, ($), (==))
-import Control.Monad.Aff (Aff, attempt, throwError)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Exception (EXCEPTION, Error, error, message)
 import Data.Either (Either(..))
-import Data.Foreign (Foreign)
+import Effect.Aff (Aff, attempt, throwError)
+import Effect.Class (liftEff)
+import Effect.Exception (EXCEPTION, Error, error, message)
+import Foreign (Foreign)
 
 import AWS.Service (ServiceName(..), service, defaultOptions)
 import AWS.Request (MethodName(..), request)
