@@ -118,30 +118,17 @@ retryDelayOptions = unsafeCoerce
 --   - xhrAsync [Boolean] — Whether the SDK will send asynchronous HTTP requests. Used in the browser environment only. Set to false to send requests synchronously. Defaults to true (async on).
 --   - xhrWithCredentials [Boolean] — Sets the "withCredentials" property of an XMLHttpRequest object. Used in the browser environment only. Defaults to false.
 type HttpOptionsType =
-    { proxy :: Maybe String
-    , connectTimeout :: Maybe Int
-    , timeout :: Maybe Int
-    , xhrAsync :: Maybe Boolean
-    , xhrWithCredentials :: Maybe Boolean
-    }
+    ( proxy :: String
+    , connectTimeout :: Int
+    , timeout :: Int
+    , xhrAsync :: Boolean
+    , xhrWithCredentials :: Boolean
+    )
 
-newtype HttpOptions = HttpOptions HttpOptionsType
-derive instance newtypeHttpOptions :: Newtype HttpOptions _
-derive instance repGenericHttpOptions :: Generic HttpOptions _
-instance showHttpOptions :: Show HttpOptions where show = genericShow
-instance encodeHttpOptions :: Encode HttpOptions where encode = genericEncode
+foreign import data HttpOptions :: Type
 
-defaultHttpOptions :: HttpOptions
-defaultHttpOptions = HttpOptions
-    { proxy: Nothing
-    , connectTimeout: Nothing
-    , timeout: Nothing
-    , xhrAsync: Nothing
-    , xhrWithCredentials: Nothing
-    }
-
-defaultHttpOptions' :: (HttpOptionsType -> HttpOptionsType) -> HttpOptions
-defaultHttpOptions' f = over HttpOptions f defaultHttpOptions
+httpOptions :: forall o _o. Union o _o HttpOptionsType => { |o } -> HttpOptions
+httpOptions = unsafeCoerce
 
 newtype Service = Service Foreign
 newtype ServiceName = ServiceName String
