@@ -2,7 +2,6 @@ module Test.AWS.Service where
 
 import Prelude (Unit, bind, pure, unit, ($), (==))
 import Data.Either (Either(..))
-import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Exception (message, throw, throwException, try)
 
@@ -25,7 +24,7 @@ testUnknownService = do
 
 testUpdateOptions :: Effect Unit
 testUpdateOptions = do
-    let newHttpOptions = defaultHttpOptions' $ _ { proxy = Just "new-proxy" }
+    let newHttpOptions = httpOptions { proxy: "new-proxy" }
     let newOptions = { httpOptions: newHttpOptions }
     _ <- service (ServiceName "S3") newOptions
     pure unit
