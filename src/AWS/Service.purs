@@ -81,28 +81,21 @@ options = unsafeCoerce
 --   - pattern [Boolean] — Validates that a string value matches a regular expression.
 --   - enum [Boolean] — Validates that a string value matches one of the allowable enum values.
 type ParamValidationType =
-    { min :: Maybe Boolean
-    , max :: Maybe Boolean
-    , pattern :: Maybe Boolean
-    , enum :: Maybe Boolean
-    }
+    ( min :: Boolean
+    , max :: Boolean
+    , pattern :: Boolean
+    , enum :: Boolean
+    )
 
-newtype ParamValidation = ParamValidation ParamValidationType
-derive instance newtypeParamValidation :: Newtype ParamValidation _
-derive instance repGenericParamValidation :: Generic ParamValidation _
-instance showParamValidation :: Show ParamValidation where show = genericShow
-instance encodeParamValidation :: Encode ParamValidation where encode = genericEncode
+foreign import data ParamValidation :: Type
 
-defaultParamValidation :: ParamValidation
-defaultParamValidation = ParamValidation
-    { min: Nothing
-    , max: Nothing
-    , pattern: Nothing
-    , enum: Nothing
-    }
+class IsParamValidation a
 
-defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> ParamValidation
-defaultParamValidation' f = over ParamValidation f defaultParamValidation
+instance isParamValidationBoolean :: IsParamValidation Boolean
+instance isParamValidationRecord :: Union o _o ParamValidationType => IsParamValidation { |o }
+
+paramValidation :: forall a. IsParamValidation a => a -> ParamValidation
+paramValidation = unsafeCoerce
 
 -- A set of options to configure the retry delay on retryable errors.
 --   - base [Integer] — The base number of milliseconds to use in the exponential backoff for operation retries. Defaults to 100 ms for all services except DynamoDB, where it defaults to 50ms.

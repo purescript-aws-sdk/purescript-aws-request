@@ -3,7 +3,7 @@ module Test.AWS.Request where
 import Prelude
 
 import AWS.Request (MethodName(..), request)
-import AWS.Service (ServiceName(..), defaultParamValidation, service)
+import AWS.Service (ServiceName(..), paramValidation, service)
 import Data.Either (Either(..))
 import Effect.Aff (Aff, attempt, throwError)
 import Effect.Class (liftEffect)
@@ -29,7 +29,7 @@ testRequestUnknownMethod = do
 
 testRequestMissingParameters :: Aff Unit
 testRequestMissingParameters = do
-    s3 <- liftEffect $ service (ServiceName "S3") $ { paramValidation: defaultParamValidation }
+    s3 <- liftEffect $ service (ServiceName "S3") $ { paramValidation: paramValidation true }
     errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") unit
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 getBucketVersioning should require parameters"
