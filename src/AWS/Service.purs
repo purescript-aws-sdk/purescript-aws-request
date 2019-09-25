@@ -1,17 +1,18 @@
 module AWS.Service where
 
-import Prelude (class Show, bind, pure, ($))
-
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, over)
 import Effect (Effect)
-import Foreign (Foreign)
-import Foreign.Class (class Encode, encode)
+import Foreign (Foreign, unsafeToForeign)
+import Foreign.Class (class Encode)
 import Foreign.Generic as Generic
 import Foreign.Generic.Class (class GenericEncode)
 import Foreign.Object (Object)
+import Prelude (class Show, bind, pure, ($))
+import Prim.Row (class Union)
+import Unsafe.Coerce (unsafeCoerce)
 
 genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
 genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleConstructors = true }
@@ -44,66 +45,35 @@ genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleCon
 -- signatureCache (Boolean) — whether the signature to sign requests with (overriding the API configuration) is cached. Only applies to the signature version 'v4'. Defaults to true.
 -- dynamoDbCrc32 (Boolean) — whether to validate the CRC32 checksum of HTTP response bodies returned by DynamoDB. Default: true.
 type OptionsType =
-    { params :: Maybe (Object String)
-    , endpoint :: Maybe String
-    , accessKeyId :: Maybe String
-    , secretAccessKey :: Maybe String
-    , region :: Maybe String
-    , maxRetries :: Maybe Int
-    , maxRedirects :: Maybe Int
-    , sslEnabled :: Maybe Boolean
-    , paramValidation :: Maybe ParamValidation
-    , computeChecksums :: Maybe Boolean
-    , convertResponseTypes :: Maybe Boolean
-    , correctClockSkew :: Maybe Boolean
-    , s3ForcePathStyle :: Maybe Boolean
-    , s3BucketEndpoint :: Maybe Boolean
-    , s3DisableBodySigning :: Maybe Boolean
-    , retryDelayOptions :: Maybe RetryDelayOptions
-    , httpOptions :: Maybe HttpOptions
-    , apiVersion :: Maybe String
---    , apiVersions :: Maybe (Object String)
-    , systemClockOffset :: Maybe Int
-    , signatureVersion :: Maybe String
-    , signatureCache :: Maybe Boolean
-    , dynamoDbCrc32 :: Maybe Boolean
-    }
+    ( params :: Object String
+    , endpoint :: String
+    , accessKeyId :: String
+    , secretAccessKey :: String
+    , region :: String
+    , maxRetries :: Int
+    , maxRedirects :: Int
+    , sslEnabled :: Boolean
+    , paramValidation :: ParamValidation
+    , computeChecksums :: Boolean
+    , convertResponseTypes :: Boolean
+    , correctClockSkew :: Boolean
+    , s3ForcePathStyle :: Boolean
+    , s3BucketEndpoint :: Boolean
+    , s3DisableBodySigning :: Boolean
+    , retryDelayOptions :: RetryDelayOptions
+    , httpOptions :: HttpOptions
+    , apiVersion :: String
+    , apiVersions :: Object String
+    , systemClockOffset :: Int
+    , signatureVersion :: String
+    , signatureCache :: Boolean
+    , dynamoDbCrc32 :: Boolean
+    )
 
-newtype Options = Options OptionsType
-derive instance newtypeOptions :: Newtype Options _
-derive instance repGenericOptions :: Generic Options _
-instance showOptions :: Show Options where show = genericShow
-instance encodeOptions :: Encode Options where encode = genericEncode
+foreign import data Options :: Type
 
-defaultOptions :: Options
-defaultOptions = Options
-    { params: Nothing
-    , endpoint: Nothing
-    , accessKeyId: Nothing
-    , secretAccessKey: Nothing
-    , region: Nothing
-    , maxRetries: Nothing
-    , maxRedirects: Nothing
-    , sslEnabled: Nothing
-    , paramValidation: Nothing
-    , computeChecksums: Nothing
-    , convertResponseTypes: Nothing
-    , correctClockSkew: Nothing
-    , s3ForcePathStyle: Nothing
-    , s3BucketEndpoint: Nothing
-    , s3DisableBodySigning: Nothing
-    , retryDelayOptions: Nothing
-    , httpOptions: Nothing
-    , apiVersion: Nothing
---    , apiVersions: Nothing
-    , systemClockOffset: Nothing
-    , signatureVersion: Nothing
-    , signatureCache: Nothing
-    , dynamoDbCrc32: Nothing
-    }
-
-defaultOptions' :: (OptionsType -> OptionsType) -> Options
-defaultOptions' f = over Options f defaultOptions
+options :: forall o _o. Union o _o OptionsType => { |o } -> Options
+options = unsafeCoerce
 
 -- Whether input parameters should be validated against the operation description before sending the request.
 --   - min [Boolean] — Validates that a value meets the min constraint. This is enabled by default when paramValidation is set to true.
@@ -192,7 +162,11 @@ newtype Service = Service Foreign
 newtype ServiceName = ServiceName String
 
 foreign import serviceImpl :: String -> Foreign -> Effect Foreign
-service :: ServiceName -> Options -> Effect Service
-service (ServiceName name) options = do
-    f <- serviceImpl name $ encode options
+
+service :: forall o _o. Union o _o OptionsType => ServiceName -> { |o } -> Effect Service
+service serviceName o = service' serviceName (options o)
+
+service' :: ServiceName -> Options -> Effect Service
+service' (ServiceName name) opts = do
+    f <- serviceImpl name (unsafeToForeign opts)
     pure $ Service f
