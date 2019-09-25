@@ -4,7 +4,7 @@
 
 ``` purescript
 newtype NoArguments
-  = NoArguments {  }
+  = NoArguments (Record ())
 ```
 
 ##### Instances

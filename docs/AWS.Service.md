@@ -9,7 +9,7 @@ genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreig
 #### `OptionsType`
 
 ``` purescript
-type OptionsType = { params :: Maybe (StrMap String), endpoint :: Maybe String, accessKeyId :: Maybe String, secretAccessKey :: Maybe String, region :: Maybe String, maxRetries :: Maybe Int, maxRedirects :: Maybe Int, sslEnabled :: Maybe Boolean, paramValidation :: Maybe ParamValidation, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, retryDelayOptions :: Maybe RetryDelayOptions, httpOptions :: Maybe HttpOptions, apiVersion :: Maybe String, apiVersions :: Maybe (StrMap String), systemClockOffset :: Maybe Int, signatureVersion :: Maybe String, signatureCache :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean }
+type OptionsType = { accessKeyId :: Maybe String, apiVersion :: Maybe String, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean, endpoint :: Maybe String, httpOptions :: Maybe HttpOptions, maxRedirects :: Maybe Int, maxRetries :: Maybe Int, paramValidation :: Maybe ParamValidation, params :: Maybe (Object String), region :: Maybe String, retryDelayOptions :: Maybe RetryDelayOptions, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, secretAccessKey :: Maybe String, signatureCache :: Maybe Boolean, signatureVersion :: Maybe String, sslEnabled :: Maybe Boolean, systemClockOffset :: Maybe Int }
 ```
 
 #### `Options`
@@ -42,7 +42,7 @@ defaultOptions' :: (OptionsType -> OptionsType) -> Options
 #### `ParamValidationType`
 
 ``` purescript
-type ParamValidationType = { min :: Maybe Boolean, max :: Maybe Boolean, pattern :: Maybe Boolean, enum :: Maybe Boolean }
+type ParamValidationType = { enum :: Maybe Boolean, max :: Maybe Boolean, min :: Maybe Boolean, pattern :: Maybe Boolean }
 ```
 
 #### `ParamValidation`
@@ -108,7 +108,7 @@ defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) ->
 #### `HttpOptionsType`
 
 ``` purescript
-type HttpOptionsType = { proxy :: Maybe String, connectTimeout :: Maybe Int, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
+type HttpOptionsType = { connectTimeout :: Maybe Int, proxy :: Maybe String, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
 ```
 
 #### `HttpOptions`
@@ -155,13 +155,13 @@ newtype ServiceName
 #### `serviceImpl`
 
 ``` purescript
-serviceImpl :: forall eff. String -> Foreign -> Eff (exception :: EXCEPTION | eff) Foreign
+serviceImpl :: String -> Foreign -> Effect Foreign
 ```
 
 #### `service`
 
 ``` purescript
-service :: forall eff. ServiceName -> Options -> Eff (exception :: EXCEPTION | eff) Service
+service :: ServiceName -> Options -> Effect Service
 ```
 
 

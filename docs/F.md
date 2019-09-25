@@ -3,7 +3,7 @@
 #### `liftF`
 
 ``` purescript
-liftF :: forall eff a. F a -> Eff (exception :: EXCEPTION | eff) a
+liftF :: forall a. F a -> Effect a
 ```
 
 
