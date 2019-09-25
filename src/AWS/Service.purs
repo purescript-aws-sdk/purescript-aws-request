@@ -62,7 +62,7 @@ type OptionsType =
     , retryDelayOptions :: Maybe RetryDelayOptions
     , httpOptions :: Maybe HttpOptions
     , apiVersion :: Maybe String
-    , apiVersions :: Maybe (Object String)
+--    , apiVersions :: Maybe (Object String)
     , systemClockOffset :: Maybe Int
     , signatureVersion :: Maybe String
     , signatureCache :: Maybe Boolean
@@ -95,7 +95,7 @@ defaultOptions = Options
     , retryDelayOptions: Nothing
     , httpOptions: Nothing
     , apiVersion: Nothing
-    , apiVersions: Nothing
+--    , apiVersions: Nothing
     , systemClockOffset: Nothing
     , signatureVersion: Nothing
     , signatureCache: Nothing
