@@ -1,21 +1,11 @@
 module AWS.Service where
 
-import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Show (genericShow)
-import Data.Maybe (Maybe(..))
-import Data.Newtype (class Newtype, over)
+import Prelude
 import Effect (Effect)
 import Foreign (Foreign, unsafeToForeign)
-import Foreign.Class (class Encode)
-import Foreign.Generic as Generic
-import Foreign.Generic.Class (class GenericEncode)
 import Foreign.Object (Object)
-import Prelude (class Show, bind, pure, ($))
 import Prim.Row (class Union)
 import Unsafe.Coerce (unsafeCoerce)
-
-genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
-genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleConstructors = true }
 
 -- params (map) — An optional map of parameters to bind to every request sent by this service object. For more information on bound parameters, see "Working with Services" in the Getting Started Guide.
 -- endpoint (String) — The endpoint URI to send requests to. The default endpoint is built from the configured region. The endpoint should be a string like 'https://{service}.{region}.amazonaws.com'.
