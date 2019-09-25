@@ -1,17 +1,17 @@
 module AWS.Service where
 
 import Prelude (class Show, bind, pure, ($))
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Data.Foreign (Foreign)
-import Data.Foreign.Class (class Encode, encode)
-import Data.Foreign.Generic as Generic
-import Data.Foreign.Generic.Class (class GenericEncode)
+
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, over)
-import Data.StrMap (StrMap)
+import Effect (Effect)
+import Foreign (Foreign)
+import Foreign.Class (class Encode, encode)
+import Foreign.Generic as Generic
+import Foreign.Generic.Class (class GenericEncode)
+import Foreign.Object (Object)
 
 genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
 genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleConstructors = true }
@@ -44,7 +44,7 @@ genericEncode = Generic.genericEncode $ Generic.defaultOptions { unwrapSingleCon
 -- signatureCache (Boolean) — whether the signature to sign requests with (overriding the API configuration) is cached. Only applies to the signature version 'v4'. Defaults to true.
 -- dynamoDbCrc32 (Boolean) — whether to validate the CRC32 checksum of HTTP response bodies returned by DynamoDB. Default: true.
 type OptionsType =
-    { params :: Maybe (StrMap String)
+    { params :: Maybe (Object String)
     , endpoint :: Maybe String
     , accessKeyId :: Maybe String
     , secretAccessKey :: Maybe String
@@ -62,7 +62,7 @@ type OptionsType =
     , retryDelayOptions :: Maybe RetryDelayOptions
     , httpOptions :: Maybe HttpOptions
     , apiVersion :: Maybe String
-    , apiVersions :: Maybe (StrMap String)
+    , apiVersions :: Maybe (Object String)
     , systemClockOffset :: Maybe Int
     , signatureVersion :: Maybe String
     , signatureCache :: Maybe Boolean
@@ -191,8 +191,8 @@ defaultHttpOptions' f = over HttpOptions f defaultHttpOptions
 newtype Service = Service Foreign
 newtype ServiceName = ServiceName String
 
-foreign import serviceImpl :: forall eff. String -> Foreign -> Eff (exception :: EXCEPTION | eff) Foreign
-service :: forall eff. ServiceName -> Options -> Eff (exception :: EXCEPTION | eff) Service
+foreign import serviceImpl :: String -> Foreign -> Effect Foreign
+service :: ServiceName -> Options -> Effect Service
 service (ServiceName name) options = do
     f <- serviceImpl name $ encode options
     pure $ Service f

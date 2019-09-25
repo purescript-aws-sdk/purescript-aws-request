@@ -1,16 +1,16 @@
 module F where
 
 import Prelude
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (EXCEPTION, throw)
 import Control.Monad.Except (runExcept)
 import Data.Array (snoc)
 import Data.Either (Either(..))
-import Data.Foreign (F, renderForeignError)
 import Data.List.NonEmpty (foldl)
 import Data.String (joinWith)
+import Effect (Effect)
+import Effect.Exception (throw)
+import Foreign (F, renderForeignError)
 
-liftF :: forall eff a. F a -> Eff (exception :: EXCEPTION | eff) a
+liftF :: forall a. F a -> Effect a
 liftF f = case runExcept f of
     Right identity -> pure identity
     Left exceptions -> exceptions
@@ -18,5 +18,3 @@ liftF f = case runExcept f of
         # map renderForeignError
         # joinWith "\n"
         # throw
-
-
