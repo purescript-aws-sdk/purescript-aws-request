@@ -1,5 +1,5 @@
 {
     "dependencies": {
-        "aws-sdk": "2.205.0"
+        "aws-sdk": "2.535.0"
     }
 }
