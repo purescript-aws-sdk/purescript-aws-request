@@ -101,22 +101,14 @@ paramValidation = unsafeCoerce
 --   - base [Integer] — The base number of milliseconds to use in the exponential backoff for operation retries. Defaults to 100 ms for all services except DynamoDB, where it defaults to 50ms.
 --   - customBackoff [function] — A custom function that accepts a retry count and returns the amount of time to delay in milliseconds. The base option will be ignored if this option is supplied.
 type RetryDelayOptionsType =
-    { base :: Maybe Int
-    }
+    ( base :: Int
+    , customBackoff :: Int -> Number
+    )
 
-newtype RetryDelayOptions = RetryDelayOptions RetryDelayOptionsType
-derive instance newtypeRetryDelayOptions :: Newtype RetryDelayOptions _
-derive instance repGenericRetryDelayOptions :: Generic RetryDelayOptions _
-instance showRetryDelayOptions :: Show RetryDelayOptions where show = genericShow
-instance encodeRetryDelayOptions :: Encode RetryDelayOptions where encode = genericEncode
+foreign import data RetryDelayOptions :: Type
 
-defaultRetryDelayOptions :: RetryDelayOptions
-defaultRetryDelayOptions = RetryDelayOptions
-    { base: Nothing
-    }
-
-defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) -> RetryDelayOptions
-defaultRetryDelayOptions' f = over RetryDelayOptions f defaultRetryDelayOptions
+retryDelayOptions :: forall o _o. Union o _o RetryDelayOptionsType => { |o } -> RetryDelayOptions
+retryDelayOptions = unsafeCoerce
 
 -- A set of options to pass to the low-level HTTP request.
 --   - proxy [String] — the URL to proxy requests through
