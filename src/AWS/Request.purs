@@ -3,21 +3,20 @@ module AWS.Request ( MethodName(..)
                    ) where
 
 import Prelude
-import Control.Monad.Aff (Aff)
-import Control.Monad.Aff.Compat (EffFnAff, fromEffFnAff)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Data.Foreign (Foreign)
-import Data.Foreign.Class (class Decode, class Encode, encode, decode)
+import Effect.Aff (Aff)
+import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
+import Effect.Class (liftEffect)
 import F (liftF)
+import Foreign (Foreign)
+import Foreign.Class (class Decode, class Encode, encode, decode)
 
 import AWS.Service (Service(..))
 
 newtype MethodName = MethodName String
 
-foreign import requestImpl :: forall eff. Foreign -> String -> Foreign -> EffFnAff (exception :: EXCEPTION | eff) Foreign
-request :: forall eff i o. Encode i => Decode o => Service -> MethodName -> i -> Aff (exception :: EXCEPTION | eff) o
+foreign import requestImpl :: Foreign -> String -> Foreign -> EffectFnAff Foreign
+request :: forall i o. Encode i => Decode o => Service -> MethodName -> i -> Aff o
 request (Service service) (MethodName method) i = do
     let fi = encode i
-    fo <- requestImpl service method fi # fromEffFnAff
-    decode fo # liftF # liftEff
+    fo <- requestImpl service method fi # fromEffectFnAff
+    decode fo # liftF # liftEffect

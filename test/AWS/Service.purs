@@ -1,20 +1,20 @@
 module Test.AWS.Service where
 
 import Prelude (Unit, bind, pure, unit, ($), (==))
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (EXCEPTION, message, throw, throwException, try)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
+import Effect (Effect)
+import Effect.Exception (message, throw, throwException, try)
 
 import AWS.Service
 
-main :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
+main :: Effect Unit
 main = do
     _ <- testUnknownService
     _ <- testUpdateOptions
     pure unit
 
-testUnknownService :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
+testUnknownService :: Effect Unit
 testUnknownService = do
     errOrSuccess <- try $ service (ServiceName "unknown") defaultOptions
     case errOrSuccess of
@@ -23,7 +23,7 @@ testUnknownService = do
             then pure unit
             else throwException err
 
-testUpdateOptions :: forall eff. Eff (exception :: EXCEPTION | eff) Unit
+testUpdateOptions :: Effect Unit
 testUpdateOptions = do
     let newHttpOptions = defaultHttpOptions' $ _ { proxy = Just "new-proxy" }
     let newOptions = defaultOptions' $ _ { httpOptions = Just newHttpOptions }
