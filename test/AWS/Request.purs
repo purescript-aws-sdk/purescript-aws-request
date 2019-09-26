@@ -20,7 +20,7 @@ main = do
 testRequestUnknownMethod :: Aff Unit
 testRequestUnknownMethod = do
     s3 <- liftEffect $ service (ServiceName "S3") {}
-    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "unknown") unit
+    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "unknown") {}
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 method unknown shouldn't exist"
         Left err -> if (message err) == "service[methodName] is not a function"
@@ -30,7 +30,7 @@ testRequestUnknownMethod = do
 testRequestMissingParameters :: Aff Unit
 testRequestMissingParameters = do
     s3 <- liftEffect $ service (ServiceName "S3") $ { paramValidation: paramValidation true }
-    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") unit
+    errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") {}
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 getBucketVersioning should require parameters"
         Left err -> if (message err) == "Missing required key 'Bucket' in params"

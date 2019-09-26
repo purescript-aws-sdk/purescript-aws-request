@@ -3,20 +3,20 @@ module AWS.Request ( MethodName(..)
                    ) where
 
 import Prelude
+
+import AWS.Service (Service(..))
 import Effect.Aff (Aff)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 import Effect.Class (liftEffect)
 import F (liftF)
 import Foreign (Foreign)
-import Foreign.Class (class Decode, class Encode, encode, decode)
-
-import AWS.Service (Service(..))
+import Simple.JSON (class ReadForeign, class WriteForeign, readImpl, writeImpl)
 
 newtype MethodName = MethodName String
 
 foreign import requestImpl :: Foreign -> String -> Foreign -> EffectFnAff Foreign
-request :: forall i o. Encode i => Decode o => Service -> MethodName -> i -> Aff o
+request :: forall i o. WriteForeign i => ReadForeign o => Service -> MethodName -> i -> Aff o
 request (Service service) (MethodName method) i = do
-    let fi = encode i
+    let fi = writeImpl i
     fo <- requestImpl service method fi # fromEffectFnAff
-    decode fo # liftF # liftEffect
+    readImpl fo # liftF # liftEffect
