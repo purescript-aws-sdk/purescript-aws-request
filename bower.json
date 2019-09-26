@@ -15,11 +15,13 @@
     "purescript-prelude": "^4.1.1",
     "purescript-console": "^4.2.0",
     "purescript-aff": "^5.1.2",
-    "purescript-foreign-generic": "^10.0.0",
     "purescript-datetime": "^4.1.1",
     "purescript-effect": "^2.0.1",
     "purescript-foreign-object": "^2.0.3",
-    "purescript-exceptions": "^4.0.0"
+    "purescript-exceptions": "^4.0.0",
+    "purescript-foreign": "^5.0.0",
+    "purescript-simple-json": "^7.0.0",
+    "purescript-generics-rep": "^6.1.1"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
