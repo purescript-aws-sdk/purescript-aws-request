@@ -1,6 +1,8 @@
 module AWS.Service where
 
 import Prelude
+
+import Data.JSDate (JSDate)
 import Effect (Effect)
 import Foreign (Foreign, unsafeToForeign)
 import Foreign.Object (Object)
@@ -52,8 +54,8 @@ type OptionsType =
     , s3DisableBodySigning :: Boolean
     , retryDelayOptions :: RetryDelayOptions
     , httpOptions :: HttpOptions
-    , apiVersion :: String
-    , apiVersions :: Object String
+    , apiVersion :: ApiVersion
+    , apiVersions :: Object ApiVersion
     , systemClockOffset :: Int
     , signatureVersion :: String
     , signatureCache :: Boolean
@@ -119,6 +121,16 @@ foreign import data HttpOptions :: Type
 
 httpOptions :: forall o _o. Union o _o HttpOptionsType => { |o } -> HttpOptions
 httpOptions = unsafeCoerce
+
+foreign import data ApiVersion :: Type
+
+class IsApiVersion a
+
+instance isApiVersionString :: IsApiVersion String
+instance isApiVersionJSDate :: IsApiVersion JSDate
+
+apiVersion :: forall a. IsApiVersion a => a -> ApiVersion
+apiVersion = unsafeCoerce
 
 newtype Service = Service Foreign
 newtype ServiceName = ServiceName String

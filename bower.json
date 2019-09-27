@@ -21,7 +21,8 @@
     "purescript-exceptions": "^4.0.0",
     "purescript-foreign": "^5.0.0",
     "purescript-simple-json": "^7.0.0",
-    "purescript-generics-rep": "^6.1.1"
+    "purescript-generics-rep": "^6.1.1",
+    "purescript-js-date": "^6.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
