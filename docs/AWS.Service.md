@@ -1,141 +1,111 @@
 ## Module AWS.Service
 
-#### `genericEncode`
-
-``` purescript
-genericEncode :: forall a rep. Generic a rep => GenericEncode rep => a -> Foreign
-```
-
 #### `OptionsType`
 
 ``` purescript
-type OptionsType = { accessKeyId :: Maybe String, apiVersion :: Maybe String, computeChecksums :: Maybe Boolean, convertResponseTypes :: Maybe Boolean, correctClockSkew :: Maybe Boolean, dynamoDbCrc32 :: Maybe Boolean, endpoint :: Maybe String, httpOptions :: Maybe HttpOptions, maxRedirects :: Maybe Int, maxRetries :: Maybe Int, paramValidation :: Maybe ParamValidation, params :: Maybe (Object String), region :: Maybe String, retryDelayOptions :: Maybe RetryDelayOptions, s3BucketEndpoint :: Maybe Boolean, s3DisableBodySigning :: Maybe Boolean, s3ForcePathStyle :: Maybe Boolean, secretAccessKey :: Maybe String, signatureCache :: Maybe Boolean, signatureVersion :: Maybe String, sslEnabled :: Maybe Boolean, systemClockOffset :: Maybe Int }
+type OptionsType = (accessKeyId :: String, apiVersion :: ApiVersion, apiVersions :: Object ApiVersion, computeChecksums :: Boolean, convertResponseTypes :: Boolean, correctClockSkew :: Boolean, dynamoDbCrc32 :: Boolean, endpoint :: String, httpOptions :: HttpOptions, maxRedirects :: Int, maxRetries :: Int, paramValidation :: ParamValidation, params :: Object String, region :: String, retryDelayOptions :: RetryDelayOptions, s3BucketEndpoint :: Boolean, s3DisableBodySigning :: Boolean, s3ForcePathStyle :: Boolean, secretAccessKey :: String, signatureCache :: Boolean, signatureVersion :: String, sslEnabled :: Boolean, systemClockOffset :: Int)
 ```
 
 #### `Options`
 
 ``` purescript
-newtype Options
-  = Options OptionsType
+data Options :: Type
 ```
 
-##### Instances
-``` purescript
-Newtype Options _
-Generic Options _
-Show Options
-Encode Options
-```
-
-#### `defaultOptions`
+#### `options`
 
 ``` purescript
-defaultOptions :: Options
-```
-
-#### `defaultOptions'`
-
-``` purescript
-defaultOptions' :: (OptionsType -> OptionsType) -> Options
+options :: forall o _o. Union o _o OptionsType => Record o -> Options
 ```
 
 #### `ParamValidationType`
 
 ``` purescript
-type ParamValidationType = { enum :: Maybe Boolean, max :: Maybe Boolean, min :: Maybe Boolean, pattern :: Maybe Boolean }
+type ParamValidationType = (enum :: Boolean, max :: Boolean, min :: Boolean, pattern :: Boolean)
 ```
 
 #### `ParamValidation`
 
 ``` purescript
-newtype ParamValidation
-  = ParamValidation ParamValidationType
+data ParamValidation :: Type
+```
+
+#### `IsParamValidation`
+
+``` purescript
+class IsParamValidation a 
 ```
 
 ##### Instances
 ``` purescript
-Newtype ParamValidation _
-Generic ParamValidation _
-Show ParamValidation
-Encode ParamValidation
+IsParamValidation Boolean
+(Union o _o ParamValidationType) => IsParamValidation (Record o)
 ```
 
-#### `defaultParamValidation`
+#### `paramValidation`
 
 ``` purescript
-defaultParamValidation :: ParamValidation
-```
-
-#### `defaultParamValidation'`
-
-``` purescript
-defaultParamValidation' :: (ParamValidationType -> ParamValidationType) -> ParamValidation
+paramValidation :: forall a. IsParamValidation a => a -> ParamValidation
 ```
 
 #### `RetryDelayOptionsType`
 
 ``` purescript
-type RetryDelayOptionsType = { base :: Maybe Int }
+type RetryDelayOptionsType = (base :: Int, customBackoff :: Int -> Number)
 ```
 
 #### `RetryDelayOptions`
 
 ``` purescript
-newtype RetryDelayOptions
-  = RetryDelayOptions RetryDelayOptionsType
+data RetryDelayOptions :: Type
 ```
 
-##### Instances
-``` purescript
-Newtype RetryDelayOptions _
-Generic RetryDelayOptions _
-Show RetryDelayOptions
-Encode RetryDelayOptions
-```
-
-#### `defaultRetryDelayOptions`
+#### `retryDelayOptions`
 
 ``` purescript
-defaultRetryDelayOptions :: RetryDelayOptions
-```
-
-#### `defaultRetryDelayOptions'`
-
-``` purescript
-defaultRetryDelayOptions' :: (RetryDelayOptionsType -> RetryDelayOptionsType) -> RetryDelayOptions
+retryDelayOptions :: forall o _o. Union o _o RetryDelayOptionsType => Record o -> RetryDelayOptions
 ```
 
 #### `HttpOptionsType`
 
 ``` purescript
-type HttpOptionsType = { connectTimeout :: Maybe Int, proxy :: Maybe String, timeout :: Maybe Int, xhrAsync :: Maybe Boolean, xhrWithCredentials :: Maybe Boolean }
+type HttpOptionsType = (connectTimeout :: Int, proxy :: String, timeout :: Int, xhrAsync :: Boolean, xhrWithCredentials :: Boolean)
 ```
 
 #### `HttpOptions`
 
 ``` purescript
-newtype HttpOptions
-  = HttpOptions HttpOptionsType
+data HttpOptions :: Type
+```
+
+#### `httpOptions`
+
+``` purescript
+httpOptions :: forall o _o. Union o _o HttpOptionsType => Record o -> HttpOptions
+```
+
+#### `ApiVersion`
+
+``` purescript
+data ApiVersion :: Type
+```
+
+#### `IsApiVersion`
+
+``` purescript
+class IsApiVersion a 
 ```
 
 ##### Instances
 ``` purescript
-Newtype HttpOptions _
-Generic HttpOptions _
-Show HttpOptions
-Encode HttpOptions
+IsApiVersion String
+IsApiVersion JSDate
 ```
 
-#### `defaultHttpOptions`
+#### `apiVersion`
 
 ``` purescript
-defaultHttpOptions :: HttpOptions
-```
-
-#### `defaultHttpOptions'`
-
-``` purescript
-defaultHttpOptions' :: (HttpOptionsType -> HttpOptionsType) -> HttpOptions
+apiVersion :: forall a. IsApiVersion a => a -> ApiVersion
 ```
 
 #### `Service`
@@ -161,7 +131,13 @@ serviceImpl :: String -> Foreign -> Effect Foreign
 #### `service`
 
 ``` purescript
-service :: ServiceName -> Options -> Effect Service
+service :: forall o _o. Union o _o OptionsType => ServiceName -> Record o -> Effect Service
+```
+
+#### `service'`
+
+``` purescript
+service' :: ServiceName -> Options -> Effect Service
 ```
 
 
