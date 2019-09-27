@@ -22,6 +22,5 @@ AWS services can be created with a set of options. Most of those are currently s
 - `credentialProvider` is missing
 - `logger` is missing
 
-- `paramValidation` can't be a `Boolean`
 - `retryDelayOptions` is missing the `customBackoff` property
 - `httpOptions` is missing the `agent` property
