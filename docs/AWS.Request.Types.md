@@ -11,8 +11,8 @@ newtype NoArguments
 ``` purescript
 Generic NoArguments _
 Show NoArguments
-Decode NoArguments
-Encode NoArguments
+ReadForeign NoArguments
+WriteForeign NoArguments
 ```
 
 #### `Timestamp`
@@ -26,8 +26,8 @@ newtype Timestamp
 ``` purescript
 Generic Timestamp _
 Show Timestamp
-Decode Timestamp
-Encode Timestamp
+ReadForeign Timestamp
+WriteForeign Timestamp
 ```
 
 
