@@ -1,25 +1,26 @@
 module Test.AWS.Request where
 
-import Prelude (Unit, bind, pure, unit, ($), (==))
-import Control.Monad.Aff (Aff, attempt, throwError)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Exception (EXCEPTION, Error, error, message)
-import Data.Either (Either(..))
-import Data.Foreign (Foreign)
+import Prelude
 
-import AWS.Service (ServiceName(..), service, defaultOptions)
 import AWS.Request (MethodName(..), request)
+import AWS.Service (ServiceName(..), defaultOptions, defaultOptions', defaultParamValidation, service)
+import Data.Either (Either(..))
+import Data.Maybe (Maybe(..))
+import Effect.Aff (Aff, attempt, throwError)
+import Effect.Class (liftEffect)
+import Effect.Exception (Error, error, message)
+import Foreign (Foreign)
 
-main :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
+main :: Aff Unit
 main = do
     _ <- testRequestUnknownMethod
     _ <- testRequestMissingParameters
 
     pure unit
 
-testRequestUnknownMethod :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
+testRequestUnknownMethod :: Aff Unit
 testRequestUnknownMethod = do
-    s3 <- liftEff $ service (ServiceName "S3") defaultOptions
+    s3 <- liftEffect $ service (ServiceName "S3") defaultOptions
     errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "unknown") unit
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 method unknown shouldn't exist"
@@ -27,9 +28,9 @@ testRequestUnknownMethod = do
             then pure unit
             else throwError err
 
-testRequestMissingParameters :: forall eff. Aff (exception :: EXCEPTION | eff) Unit
+testRequestMissingParameters :: Aff Unit
 testRequestMissingParameters = do
-    s3 <- liftEff $ service (ServiceName "S3") defaultOptions
+    s3 <- liftEffect $ service (ServiceName "S3") $ defaultOptions' _ { paramValidation = Just defaultParamValidation }
     errOrSuccess :: Either Error Foreign <- attempt $ request s3 (MethodName "getBucketVersioning") unit
     case errOrSuccess of
         Right succ -> throwError $ error "AWS S3 getBucketVersioning should require parameters"
