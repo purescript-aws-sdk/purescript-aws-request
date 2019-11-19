@@ -18,7 +18,7 @@ build:
 
           echo Installing purescript...
           echo '{ "allow_root": true }' > /root/.bowerrc
-          npm install --global --unsafe-perm=true bower pulp purescript@0.13
+          npm install --global --unsafe-perm=true spago purescript@0.13
 
           echo Configurring git...
           git config --global user.email "$GITHUB_SSH_USER_NAME"
