@@ -6,18 +6,18 @@ VERSION_PATCH := $(shell git fetch --tags && git tag -l v${VERSION_MAJ_MIN}.[^0]
 VERSION := ${VERSION_MAJ_MIN}.$$((${VERSION_PATCH} + 1))
 
 clean:
-	rm -fr bower_components node_modules output
+	rm -fr node_modules output
 
 init:
 	npm update
-	bower update
+	spago install
 
 build:
-	pulp build
+	spago build
 
 test:
-	pulp test
-	pulp docs -- --format markdown && rm -fr docs && mkdir docs && mv generated-docs/md/F.md generated-docs/md/AWS*.md docs/
+	spago test
+	spago docs --format markdown && rm -fr docs && mkdir docs && mv generated-docs/md/F.md generated-docs/md/AWS*.md docs/
 	[ -z "$$(git status --porcelain)" ] || (echo "Generated content not commited" && exit 1)
 
 release:
