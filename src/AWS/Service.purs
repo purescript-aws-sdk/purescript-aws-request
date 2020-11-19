@@ -1,13 +1,23 @@
-module AWS.Service where
-
-import Prelude
+module AWS.Service
+       ( Options
+       , ParamValidation
+       , paramValidation
+       , RetryDelayOptions
+       , retryDelayOptions
+       , HttpOptions
+       , httpOptions
+       , ApiVersion
+       , apiVersion
+       , Service
+       , ServiceName
+       , service
+       ) where
 
 import Data.JSDate (JSDate)
 import Effect (Effect)
-import Foreign (Foreign, unsafeToForeign)
 import Foreign.Object (Object)
-import Prim.Row (class Union)
-import Unsafe.Coerce (unsafeCoerce)
+import Untagged.Coercible (class Coercible, coerce)
+import Untagged.Union (type (|+|), UndefinedOr)
 
 -- params (map) — An optional map of parameters to bind to every request sent by this service object. For more information on bound parameters, see "Working with Services" in the Getting Started Guide.
 -- endpoint (String) — The endpoint URI to send requests to. The default endpoint is built from the configured region. The endpoint should be a string like 'https://{service}.{region}.amazonaws.com'.
@@ -36,71 +46,55 @@ import Unsafe.Coerce (unsafeCoerce)
 -- signatureVersion (String) — the signature version to sign requests with (overriding the API configuration). Possible values are: 'v2', 'v3', 'v4'.
 -- signatureCache (Boolean) — whether the signature to sign requests with (overriding the API configuration) is cached. Only applies to the signature version 'v4'. Defaults to true.
 -- dynamoDbCrc32 (Boolean) — whether to validate the CRC32 checksum of HTTP response bodies returned by DynamoDB. Default: true.
-type OptionsType =
-    ( params :: Object String
-    , endpoint :: String
-    , accessKeyId :: String
-    , secretAccessKey :: String
-    , region :: String
-    , maxRetries :: Int
-    , maxRedirects :: Int
-    , sslEnabled :: Boolean
-    , paramValidation :: ParamValidation
-    , computeChecksums :: Boolean
-    , convertResponseTypes :: Boolean
-    , correctClockSkew :: Boolean
-    , s3ForcePathStyle :: Boolean
-    , s3BucketEndpoint :: Boolean
-    , s3DisableBodySigning :: Boolean
-    , retryDelayOptions :: RetryDelayOptions
-    , httpOptions :: HttpOptions
-    , apiVersion :: ApiVersion
-    , apiVersions :: Object ApiVersion
-    , systemClockOffset :: Int
-    , signatureVersion :: String
-    , signatureCache :: Boolean
-    , dynamoDbCrc32 :: Boolean
-    )
-
-foreign import data Options :: Type
-
-options :: forall o _o. Union o _o OptionsType => { |o } -> Options
-options = unsafeCoerce
+type Options =
+    { params :: UndefinedOr (Object String)
+    , endpoint :: UndefinedOr String
+    , accessKeyId :: UndefinedOr String
+    , secretAccessKey :: UndefinedOr String
+    , region :: UndefinedOr String
+    , maxRetries :: UndefinedOr Int
+    , maxRedirects :: UndefinedOr Int
+    , sslEnabled :: UndefinedOr Boolean
+    , paramValidation :: UndefinedOr (Boolean |+| ParamValidation)
+    , computeChecksums :: UndefinedOr Boolean
+    , convertResponseTypes :: UndefinedOr Boolean
+    , correctClockSkew :: UndefinedOr Boolean
+    , s3ForcePathStyle :: UndefinedOr Boolean
+    , s3BucketEndpoint :: UndefinedOr Boolean
+    , s3DisableBodySigning :: UndefinedOr Boolean
+    , retryDelayOptions :: UndefinedOr RetryDelayOptions
+    , httpOptions :: UndefinedOr HttpOptions
+    , apiVersion :: UndefinedOr ApiVersion
+    , apiVersions :: UndefinedOr (Object ApiVersion)
+    , systemClockOffset :: UndefinedOr Int
+    , signatureVersion :: UndefinedOr String
+    , signatureCache :: UndefinedOr Boolean
+    , dynamoDbCrc32 :: UndefinedOr Boolean
+    }
 
 -- Whether input parameters should be validated against the operation description before sending the request.
 --   - min [Boolean] — Validates that a value meets the min constraint. This is enabled by default when paramValidation is set to true.
 --   - max [Boolean] — Validates that a value meets the max constraint.
 --   - pattern [Boolean] — Validates that a string value matches a regular expression.
 --   - enum [Boolean] — Validates that a string value matches one of the allowable enum values.
-type ParamValidationType =
-    ( min :: Boolean
-    , max :: Boolean
-    , pattern :: Boolean
-    , enum :: Boolean
-    )
-
-foreign import data ParamValidation :: Type
-
-class IsParamValidation a
-
-instance isParamValidationBoolean :: IsParamValidation Boolean
-instance isParamValidationRecord :: Union o _o ParamValidationType => IsParamValidation { |o }
-
-paramValidation :: forall a. IsParamValidation a => a -> ParamValidation
-paramValidation = unsafeCoerce
+type ParamValidation =
+  { min :: UndefinedOr Boolean
+  , max :: UndefinedOr Boolean
+  , pattern :: UndefinedOr Boolean
+  , enum :: UndefinedOr Boolean
+  }
+paramValidation :: forall a. Coercible a ParamValidation => a -> ParamValidation
+paramValidation = coerce
 
 -- A set of options to configure the retry delay on retryable errors.
 --   - base [Integer] — The base number of milliseconds to use in the exponential backoff for operation retries. Defaults to 100 ms for all services except DynamoDB, where it defaults to 50ms.
 --   - customBackoff [function] — A custom function that accepts a retry count and returns the amount of time to delay in milliseconds. The base option will be ignored if this option is supplied.
-type RetryDelayOptionsType =
-    ( base :: Int
-    , customBackoff :: Int -> Number
-    )
-
-foreign import data RetryDelayOptions :: Type
-
-retryDelayOptions :: forall o _o. Union o _o RetryDelayOptionsType => { |o } -> RetryDelayOptions
-retryDelayOptions = unsafeCoerce
+type RetryDelayOptions =
+  { base :: UndefinedOr Int
+  , customBackoff :: (Int -> UndefinedOr Number)
+  }
+retryDelayOptions :: forall a. Coercible a RetryDelayOptions => a -> RetryDelayOptions
+retryDelayOptions = coerce
 
 -- A set of options to pass to the low-level HTTP request.
 --   - proxy [String] — the URL to proxy requests through
@@ -109,38 +103,24 @@ retryDelayOptions = unsafeCoerce
 --   - timeout [Int] — Sets the socket to timeout after timeout milliseconds of inactivity on the socket. Defaults to two minutes (120000).
 --   - xhrAsync [Boolean] — Whether the SDK will send asynchronous HTTP requests. Used in the browser environment only. Set to false to send requests synchronously. Defaults to true (async on).
 --   - xhrWithCredentials [Boolean] — Sets the "withCredentials" property of an XMLHttpRequest object. Used in the browser environment only. Defaults to false.
-type HttpOptionsType =
-    ( proxy :: String
-    , connectTimeout :: Int
-    , timeout :: Int
-    , xhrAsync :: Boolean
-    , xhrWithCredentials :: Boolean
-    )
+type HttpOptions =
+  { proxy :: UndefinedOr String
+  , connectTimeout :: UndefinedOr Int
+  , timeout :: UndefinedOr Int
+  , xhrAsync :: UndefinedOr Boolean
+  , xhrWithCredentials :: UndefinedOr Boolean
+  }
+httpOptions :: forall a. Coercible a HttpOptions => a -> HttpOptions
+httpOptions = coerce
 
-foreign import data HttpOptions :: Type
+type ApiVersion = String |+| JSDate
+apiVersion :: forall a. Coercible a ApiVersion => a -> ApiVersion
+apiVersion = coerce
 
-httpOptions :: forall o _o. Union o _o HttpOptionsType => { |o } -> HttpOptions
-httpOptions = unsafeCoerce
+foreign import data Service :: Type
+type ServiceName = String
 
-foreign import data ApiVersion :: Type
+foreign import serviceImpl :: String -> Options -> Effect Service
 
-class IsApiVersion a
-
-instance isApiVersionString :: IsApiVersion String
-instance isApiVersionJSDate :: IsApiVersion JSDate
-
-apiVersion :: forall a. IsApiVersion a => a -> ApiVersion
-apiVersion = unsafeCoerce
-
-newtype Service = Service Foreign
-newtype ServiceName = ServiceName String
-
-foreign import serviceImpl :: String -> Foreign -> Effect Foreign
-
-service :: forall o _o. Union o _o OptionsType => ServiceName -> { |o } -> Effect Service
-service serviceName o = service' serviceName (options o)
-
-service' :: ServiceName -> Options -> Effect Service
-service' (ServiceName name) opts = do
-    f <- serviceImpl name (unsafeToForeign opts)
-    pure $ Service f
+service :: forall r. Coercible r Options => ServiceName -> r -> Effect Service
+service serviceName r = serviceImpl serviceName (coerce r)
