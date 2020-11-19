@@ -1,22 +1,17 @@
-{-
-Welcome to a Spago project!
-You can edit this file as you like.
--}
 { name = "aws-request"
 , dependencies =
-    [ "aff"
-    , "console"
-    , "datetime"
-    , "effect"
-    , "exceptions"
-    , "foreign"
-    , "foreign-object"
-    , "generics-rep"
-    , "js-date"
-    , "prelude"
-    , "psci-support"
-    , "simple-json"
-    ]
+  [ "aff"
+  , "console"
+  , "datetime"
+  , "effect"
+  , "exceptions"
+  , "foreign"
+  , "foreign-object"
+  , "js-date"
+  , "untagged-union"
+  , "prelude"
+  , "psci-support"
+  ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
 }
