@@ -1,22 +1,26 @@
-module AWS.Request ( MethodName(..)
-                   , request
-                   ) where
+module AWS.Request
+       ( MethodName
+       , request
+       , unsafeRequest
+       ) where
 
 import Prelude
 
-import AWS.Service (Service(..))
+import AWS.Service (Service)
 import Effect.Aff (Aff)
 import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
-import Effect.Class (liftEffect)
-import F (liftF)
 import Foreign (Foreign)
-import Simple.JSON (class ReadForeign, class WriteForeign, readImpl, writeImpl)
+import Unsafe.Coerce (unsafeCoerce)
 
-newtype MethodName = MethodName String
+type MethodName = String
 
-foreign import requestImpl :: Foreign -> String -> Foreign -> EffectFnAff Foreign
-request :: forall i o. WriteForeign i => ReadForeign o => Service -> MethodName -> i -> Aff o
-request (Service service) (MethodName method) i = do
-    let fi = writeImpl i
-    fo <- requestImpl service method fi # fromEffectFnAff
-    readImpl fo # liftF # liftEffect
+foreign import requestImpl :: Service -> MethodName -> Foreign -> EffectFnAff Foreign
+
+request :: Service -> MethodName -> Foreign -> Aff Foreign
+request service methodName i =
+  requestImpl service methodName i # fromEffectFnAff
+
+--| Only call `unsafeRequest` for auto generated code that guarantees
+--| that the `input` and `output` types are correct.
+unsafeRequest :: forall input output. Service -> MethodName -> input -> Aff output
+unsafeRequest = unsafeCoerce request
