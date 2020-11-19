@@ -1,143 +1,75 @@
 ## Module AWS.Service
 
-#### `OptionsType`
-
-``` purescript
-type OptionsType = (accessKeyId :: String, apiVersion :: ApiVersion, apiVersions :: Object ApiVersion, computeChecksums :: Boolean, convertResponseTypes :: Boolean, correctClockSkew :: Boolean, dynamoDbCrc32 :: Boolean, endpoint :: String, httpOptions :: HttpOptions, maxRedirects :: Int, maxRetries :: Int, paramValidation :: ParamValidation, params :: Object String, region :: String, retryDelayOptions :: RetryDelayOptions, s3BucketEndpoint :: Boolean, s3DisableBodySigning :: Boolean, s3ForcePathStyle :: Boolean, secretAccessKey :: String, signatureCache :: Boolean, signatureVersion :: String, sslEnabled :: Boolean, systemClockOffset :: Int)
-```
-
 #### `Options`
 
 ``` purescript
-data Options :: Type
-```
-
-#### `options`
-
-``` purescript
-options :: forall o _o. Union o _o OptionsType => Record o -> Options
-```
-
-#### `ParamValidationType`
-
-``` purescript
-type ParamValidationType = (enum :: Boolean, max :: Boolean, min :: Boolean, pattern :: Boolean)
+type Options = { accessKeyId :: UndefinedOr String, apiVersion :: UndefinedOr ApiVersion, apiVersions :: UndefinedOr (Object ApiVersion), computeChecksums :: UndefinedOr Boolean, convertResponseTypes :: UndefinedOr Boolean, correctClockSkew :: UndefinedOr Boolean, dynamoDbCrc32 :: UndefinedOr Boolean, endpoint :: UndefinedOr String, httpOptions :: UndefinedOr HttpOptions, maxRedirects :: UndefinedOr Int, maxRetries :: UndefinedOr Int, paramValidation :: UndefinedOr (Boolean |+| ParamValidation), params :: UndefinedOr (Object String), region :: UndefinedOr String, retryDelayOptions :: UndefinedOr RetryDelayOptions, s3BucketEndpoint :: UndefinedOr Boolean, s3DisableBodySigning :: UndefinedOr Boolean, s3ForcePathStyle :: UndefinedOr Boolean, secretAccessKey :: UndefinedOr String, signatureCache :: UndefinedOr Boolean, signatureVersion :: UndefinedOr String, sslEnabled :: UndefinedOr Boolean, systemClockOffset :: UndefinedOr Int }
 ```
 
 #### `ParamValidation`
 
 ``` purescript
-data ParamValidation :: Type
-```
-
-#### `IsParamValidation`
-
-``` purescript
-class IsParamValidation a 
-```
-
-##### Instances
-``` purescript
-IsParamValidation Boolean
-(Union o _o ParamValidationType) => IsParamValidation (Record o)
+type ParamValidation = { enum :: UndefinedOr Boolean, max :: UndefinedOr Boolean, min :: UndefinedOr Boolean, pattern :: UndefinedOr Boolean }
 ```
 
 #### `paramValidation`
 
 ``` purescript
-paramValidation :: forall a. IsParamValidation a => a -> ParamValidation
-```
-
-#### `RetryDelayOptionsType`
-
-``` purescript
-type RetryDelayOptionsType = (base :: Int, customBackoff :: Int -> Number)
+paramValidation :: forall a. Coercible a ParamValidation => a -> ParamValidation
 ```
 
 #### `RetryDelayOptions`
 
 ``` purescript
-data RetryDelayOptions :: Type
+type RetryDelayOptions = { base :: UndefinedOr Int, customBackoff :: Int -> UndefinedOr Number }
 ```
 
 #### `retryDelayOptions`
 
 ``` purescript
-retryDelayOptions :: forall o _o. Union o _o RetryDelayOptionsType => Record o -> RetryDelayOptions
-```
-
-#### `HttpOptionsType`
-
-``` purescript
-type HttpOptionsType = (connectTimeout :: Int, proxy :: String, timeout :: Int, xhrAsync :: Boolean, xhrWithCredentials :: Boolean)
+retryDelayOptions :: forall a. Coercible a RetryDelayOptions => a -> RetryDelayOptions
 ```
 
 #### `HttpOptions`
 
 ``` purescript
-data HttpOptions :: Type
+type HttpOptions = { connectTimeout :: UndefinedOr Int, proxy :: UndefinedOr String, timeout :: UndefinedOr Int, xhrAsync :: UndefinedOr Boolean, xhrWithCredentials :: UndefinedOr Boolean }
 ```
 
 #### `httpOptions`
 
 ``` purescript
-httpOptions :: forall o _o. Union o _o HttpOptionsType => Record o -> HttpOptions
+httpOptions :: forall a. Coercible a HttpOptions => a -> HttpOptions
 ```
 
 #### `ApiVersion`
 
 ``` purescript
-data ApiVersion :: Type
-```
-
-#### `IsApiVersion`
-
-``` purescript
-class IsApiVersion a 
-```
-
-##### Instances
-``` purescript
-IsApiVersion String
-IsApiVersion JSDate
+type ApiVersion = String |+| JSDate
 ```
 
 #### `apiVersion`
 
 ``` purescript
-apiVersion :: forall a. IsApiVersion a => a -> ApiVersion
+apiVersion :: forall a. Coercible a ApiVersion => a -> ApiVersion
 ```
 
 #### `Service`
 
 ``` purescript
-newtype Service
-  = Service Foreign
+data Service :: Type
 ```
 
 #### `ServiceName`
 
 ``` purescript
-newtype ServiceName
-  = ServiceName String
-```
-
-#### `serviceImpl`
-
-``` purescript
-serviceImpl :: String -> Foreign -> Effect Foreign
+type ServiceName = String
 ```
 
 #### `service`
 
 ``` purescript
-service :: forall o _o. Union o _o OptionsType => ServiceName -> Record o -> Effect Service
-```
-
-#### `service'`
-
-``` purescript
-service' :: ServiceName -> Options -> Effect Service
+service :: forall r. Coercible r Options => ServiceName -> r -> Effect Service
 ```
 
 

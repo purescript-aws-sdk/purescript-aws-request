@@ -1,20 +1,5 @@
 ## Module AWS.Request.Types
 
-#### `NoArguments`
-
-``` purescript
-newtype NoArguments
-  = NoArguments (Record ())
-```
-
-##### Instances
-``` purescript
-Generic NoArguments _
-Show NoArguments
-ReadForeign NoArguments
-WriteForeign NoArguments
-```
-
 #### `Timestamp`
 
 ``` purescript
@@ -24,10 +9,8 @@ newtype Timestamp
 
 ##### Instances
 ``` purescript
-Generic Timestamp _
+Newtype Timestamp _
 Show Timestamp
-ReadForeign Timestamp
-WriteForeign Timestamp
 ```
 
 
